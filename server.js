@@ -14,7 +14,7 @@ app.use(cors());
 app.use(fileUpload());
 
 
-app.use('/test-midtrans', require('./src/routes/test.js'));
+app.use('/api/ticket', require('./src/routes/ticket.js'));
 
 
 app.listen(PORT, () => {

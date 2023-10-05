@@ -13,7 +13,7 @@ module.exports = {
         password: process.env.DB_PASS || '', 
         database: process.env.DB_NAME || 'mrmsumn2023'
       },
-      debug: true,
+      debug: false,
     },
     production: {
       client: process.env.DB_CLIENT || 'mysql' ,
