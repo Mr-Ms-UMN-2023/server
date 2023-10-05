@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server",
-    "dev": "nodemon server"
+    "dev": "nodemon server", 
+    "install" : "npm install"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +26,7 @@
     "mysql2": "^3.6.1",
     "objection": "^3.1.2",
     "qrcode": "^1.5.3",
+    "random-token": "^0.0.8",
     "uuid": "^9.0.1",
     "uuidv4": "^6.2.13",
     "zod": "^3.22.3"
