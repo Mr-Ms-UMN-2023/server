@@ -1,18 +1,21 @@
 const express = require('express');
+const path = require('path');
+const fs = require('fs');
+const ejs = require('ejs');
 const { v4: uuid } = require('uuid');
 const { Model } = require("objection");
 const randomToken = require("random-token");
 const Audience = require('../models/Audience');
 const Transaction = require('../models/Transaction');
+const nodeMailer = require('../config/mail');
 const router = express.Router();
 const User = require('../models/User');
 const { createError } = require('../helpers/request_validation');
 const products = require('../config/products');
+const { sendEmail } = require('../helpers/mailer');
 const validator = require('../helpers/data_validation');
 const ValidationException = require('../exceptions/ValidationException');
 const { midtransCore, midtransSnap } = require("../config/midtrans");
-
-
 
 
 const orderTicket = async (req, res) => {
@@ -103,6 +106,7 @@ const orderTicket = async (req, res) => {
 
 
 const paymentNotification = async (req, res) => {
+
     try {
         const payload = req.body;
         const { transaction_status, order_id } = payload;
@@ -125,7 +129,9 @@ const paymentNotification = async (req, res) => {
         
          
         if (transaction_status == "settlement") {
+
             const token = "MRMS23-" + randomToken(32);
+  
             Model.transaction(async (trx) => {
                 await Transaction.query()
                     .where({
@@ -146,14 +152,47 @@ const paymentNotification = async (req, res) => {
                   code : 500, 
                   message : "Internal Server Error : " + err.message
                 });
-              });                 
-         
+              });
+              
+            const customer = await Audience.query()
+                .where({
+                    transaction_id: order_id,
+                })
+                .first();
+
+            
+            
+            const htmlDir = path.join(process.cwd(), "/src/views/mail/ticket.ejs");
+              
+            fs.readFile(htmlDir, 'utf-8', (err, html) => {
+                if (err) {
+                    console.error('Error reading HTML for email : ' + err);
+                    return res.status(200).json({
+                        status: "SUCCESS",
+                        type: "PAYMENT_SETTLEMENT",
+                        code: 200,
+                        message: "Pembayaran berhasil dilakukan namun ada permasalahan dengan pengiriman email.",
+                    });                         
+                }
+
+                const { nama, email } = customer;
+
+                const variables = {nama}
+
+                const renderHtml = ejs.render(html, variables);
+                
+                sendEmail(email, "Ticket Himalaya", renderHtml);
+                
+            });
+
             return res.status(200).json({
                 status: "SUCCESS",
                 type: "PAYMENT_SETTLEMENT",
                 code: 200,
                 message: "Pembayaran berhasil dilakukan.",
-            });          
+            });              
+         
+        
 
         // send email di akhir
         } if (transaction_status == "pending") {
