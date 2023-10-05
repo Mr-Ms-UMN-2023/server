@@ -68,6 +68,7 @@ const orderTicket = async (req, res) => {
               transaction_id : body.transaction_details.order_id,
             });
   
+            
           }).catch((err) => {
             console.error(err);
             return res.status(500).send({
