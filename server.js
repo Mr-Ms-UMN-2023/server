@@ -14,7 +14,7 @@ app.use(cors());
 app.use(fileUpload());
 
 app.use("/api/ticket", require("./src/routes/ticket.js"));
-app.use("/pdf", require("./src/routes/pdf.js"));
+app.use("/api/pdf", require("./src/routes/pdf.js"));
 
 app.listen(PORT, () => {
   console.log(`Listening to the server on port : ${PORT}`);
