@@ -13,6 +13,11 @@ app.use(express.static("public"));
 app.use(cors());
 app.use(fileUpload());
 
+
+// admin routes
+app.use("/api/auth", require("./src/routes/users/auth.js"));
+
+// public routes
 app.use("/api/ticket", require("./src/routes/ticket.js"));
 app.use("/api/pdf", require("./src/routes/pdf.js"));
 
