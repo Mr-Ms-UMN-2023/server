@@ -7,6 +7,7 @@ const user = process.env.MAIL_ACCOUNT;
 const pass = process.env.MAIL_PASSWORD;
 const clientID = process.env.OAUTH_CLIENT_ID;
 const clientSecret = process.env.OAUTH_CLIENT_SECRET;
+const accessToken = process.env.GMAIL_OAUTH_ACCESS_TOKEN;
 const refreshToken = process.env.GMAIL_OAUTH_REFRESH_TOKEN;
 
 if (!global.transporter) {
@@ -16,7 +17,8 @@ if (!global.transporter) {
       service: 'gmail', 
       auth: {
         type: 'OAuth2',
-        user, pass,
+        user: user, 
+        pass : pass,
         clientId: clientID,
         clientSecret: clientSecret,
         refreshToken: refreshToken,

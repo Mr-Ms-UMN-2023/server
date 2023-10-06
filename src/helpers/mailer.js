@@ -7,6 +7,7 @@ const sendEmail = (destination, subject, html) => {
         subject, 
         html
     }
+    console.log(options);
     nodeMailer.sendMail(options);
 }
 
