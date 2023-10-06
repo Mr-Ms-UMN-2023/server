@@ -80,7 +80,7 @@ const orderTicket = async (req, res) => {
           });        
   
           const token = await midtransSnap.createTransactionToken(body);      
-    
+          console.log(token);
           return res.status(201).send({
             code : 201, 
             message : "Berhasil menukar token snap.",
@@ -106,7 +106,7 @@ const orderTicket = async (req, res) => {
 
 
 const paymentNotification = async (req, res) => {
-
+    console.log("body", req.body);
     try {
         const payload = req.body;
         const { transaction_status, order_id } = payload;
@@ -184,7 +184,7 @@ const paymentNotification = async (req, res) => {
                 sendEmail(email, "Ticket Himalaya", renderHtml);
                 
             });
-
+            console.log("berhasil!");
             return res.status(200).json({
                 status: "SUCCESS",
                 type: "PAYMENT_SETTLEMENT",
