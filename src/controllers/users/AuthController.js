@@ -2,22 +2,18 @@ const { v4: uuid } = require('uuid');
 const { Model } = require("objection");
 const bcrypt = require("bcrypt");
 const randomToken = require("random-token");
-const Audience = require('../models/Audience');
-const Transaction = require('../models/Transaction');
+const User = require('../../models/User');
 const jwt = require("jsonwebtoken");
-const User = require('../models/User');
-const { createError } = require('../helpers/request_validation');
-const products = require('../config/products');
-const validator = require('../helpers/data_validation');
-const ValidationException = require('../exceptions/ValidationException');
+const { createError } = require('../../helpers/request_validation');
+const validator = require('../../helpers/data_validation');
+const ValidationException = require('../../exceptions/ValidationException');
 
 const login = async (req, res) => {
-    const validationInfoList = [];    
     try {
 
         const { email = "", password = "" } = req.body;
         
-        const user = await Audience.query()
+        const user = await User.query()
             .where({email})
             .first();
 
@@ -30,11 +26,7 @@ const login = async (req, res) => {
             throw new ValidationException(401, "Email dan/atau kata sandi salah.", "UNAUTHENTICATED");
         }   
         
-        const token = jwt.sign({
-            id : user.id,
-            username : user.username, 
-            email : user.email,
-        }, process.env.JWT_SECRET, {
+        const token = jwt.sign({id : user.id}, process.env.JWT_SECRET, {
             expiresIn: 86400,
           }); 
 
@@ -53,7 +45,6 @@ const login = async (req, res) => {
                 code : err.code, 
                 type : err.type,
                 message : err.message, 
-                error : validationInfoList
               });            
         }
 

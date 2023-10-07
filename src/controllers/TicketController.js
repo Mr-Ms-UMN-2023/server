@@ -106,7 +106,7 @@ const orderTicket = async (req, res) => {
 
 
 const paymentNotification = async (req, res) => {
-    console.log("body", req.body);
+
     try {
         const payload = req.body;
         const { transaction_status, order_id } = payload;
@@ -239,7 +239,6 @@ const paymentNotification = async (req, res) => {
                 code : err.code, 
                 type : err.type,
                 message : err.message, 
-                error : validationInfoList
               });            
         }        
 
