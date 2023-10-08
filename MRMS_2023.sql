@@ -175,21 +175,35 @@ CREATE TABLE `peserta_2023` (
 
 
 
-CREATE TABLE transactions (
-  `id` VARCHAR(50),
-  `status` VARCHAR(30) NULL,
-  `payment_init_time` datetime DEFAULT NOW(),
-  `payment_done_time` datetime NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) 
+
+
+CREATE TABLE `himalaya_items` (
+  `id` VARCHAR(255), 
+  `nama` VARCHAR(255),
+  `deskripsi` VARCHAR(255), 
+  `quota` INTEGER,
+  `reserved` INTEGER DEFAULT 0,
+  `harga` INTEGER,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+
+CREATE TABLE `transactions` (
+  `id` VARCHAR(50),
+  `status` VARCHAR(30) NULL,
+  `quantity` INTEGER, 
+  `item_id` VARCHAR(255),
+  `payment_init_time` datetime DEFAULT NOW(),
+  `payment_done_time` datetime NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`item_id`) REFERENCES `himalaya_items` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `himalaya_audiences` (
   `id` VARCHAR(255), 
   `nama` VARCHAR(255), 
   `email` VARCHAR(255), 
   `whatsapp` VARCHAR(50),
-  `token` VARCHAR(50) NULL,
   `transaction_id` VARCHAR(50) NULL,
   `created_at` datetime DEFAULT NOW(),  
   `updated_at` datetime DEFAULT NOW(),
@@ -198,10 +212,20 @@ CREATE TABLE `himalaya_audiences` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+CREATE TABLE `himalaya_qr_tokens` (
+  `token` VARCHAR(255), 
+  `audience_id` VARCHAR(255), 
+  PRIMARY KEY (`token`), 
+  FOREIGN KEY (`audience_id`) REFERENCES `himalaya_audiences` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
 
 --
 -- Dumping data for table `peserta_2023`
 --
+
+INSERT INTO `himalaya_items` VALUES ("(TESTING) TICKET HIMALAYA", "(TESTING) Tiket HIMALAYA MR. & MS. UMN 2023", "-", 1300, 0, 20000);
 
 INSERT INTO `peserta_2023` (`id`, `name`, `nim`, `email_student`, `birth_place`, `birth_date`, `gender`, `address`, `phone_number`, `line_id`, `instagram_username`, `tiktok_username`, `major`, `year`, `sub_gpa`, `gpa`, `height`, `weight`, `clothes_size`, `shoe_size`, `pants_size`, `about_me`, `motivation`, `personality`, `talents`, `achievements`, `picture`, `personality_screenshot`, `grades_screenshot`, `student_card_screenshot`, `created_at`) VALUES
 (31, 'Nixon Osel Linuel', '00000069221', 'nixon.osel@student.umn.ac.id', 'Tangerang', '2004-04-07', 'm', 'Jalan Raya Pondok Aren No.3, Bintaro', '087876829899', 'nixonosel24', '@nixnosl', '', 'Komunikasi Strategis', '2022', '', '3.78', '173', '68', 'L', 44, '30', 'Saya merupakan mahasiswa aktif Universitas Multimedia Nusantara yang mengambil jurusan Ilmu Komunikasi Angkatan 2022. Saya menyukai hal-hal berbau olahraga dan musik.', 'Saya ingin mengeksplor hal baru, berusaha mengembangkan kualitas diri, dan membangun relasi yang baik terhadap mahasiswa/i UMN', 'INFJ-A', 'Saya bisa bermain musik (piano dan gitar), saya menyukai olahraga (gym, calisthenics, berenang, badminton), saya bisa bermain berbagai macam rubik', '', '/public/images/pictures/1681315554505_Pas Foto Nixon (1).png', '/public/images/personality_screenshots/1681315554506_MBTI.jpg', '/public/images/grades_screenshots/1681315554565_IPK.jpg', '/public/images/student_card_screenshots/1681315554567_KTM.jpg', '2023-04-12 09:05:54'),
