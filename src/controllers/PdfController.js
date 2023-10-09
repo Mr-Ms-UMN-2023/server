@@ -1,33 +1,65 @@
 const fs = require("fs");
+const path = require('path');
 const htmlPDF = require("puppeteer-html-pdf");
 const readFile = require("util").promisify(fs.readFile);
 const products = require("../config/products");
+const Transaction = require('../models/Transaction');
+const Audience = require('../models/Audience');
+const QRToken = require('../models/QRToken');
+const QRCode = require("qrcode");
 const ejs = require("ejs");
 
-const print = async (req, res) => {
-  const pdfData = {
-    tiketData: {
-      nama: "Koong Hiap",
-    },
 
-    baseUrl: `${req.protocol}://${req.hostname}`,
-  };
-
-  const options = {
-    path: `storage/${products?.ticket.name}-${products?.ticket.id}.pdf`,
-  };
-
+const downloadTicket = async (req, res) => {
   try {
-    const html = await fs.readFileSync("src/views/pdf/ticket.ejs", "utf8");
-    const template = ejs.render(html, pdfData);
 
-    const buffer = await htmlPDF.create(template, options);
-    res.attachment(`${products?.ticket.name}-${products?.ticket.id}.pdf`);
-    res.end(buffer);
+    const { token = "" } = req.params; 
+    // const file = await fs.promises.readFile(`storage/Tiket Himalaya - ${token.split('-')[1]}.pdf`, "utf8")
+    const file = path.join(process.cwd(), `storage/Tiket Himalaya - ${token.split('-')[1]}.pdf`);
+    fs.access(file, fs.constants.F_OK, async (err) => {
+      if (err) {
+
+          const findToken = await QRToken.query()
+            .select('himalaya_qr_tokens.token AS token', 'himalaya_audiences.*')
+            .join('himalaya_audiences', 'himalaya_audiences.id', '=', 'himalaya_qr_tokens.audience_id')
+            .where({'himalaya_qr_tokens.token' : token})
+            .first();
+            
+          
+          if (!findToken){
+              return res.status(404).send({
+                code : 404, 
+                message : "Token tidak valid."
+              });
+          }
+
+
+          const qrCodeImage = await QRCode.toDataURL(findToken?.token);          
+          const PDFVariables = {
+            nama : findToken.nama, 
+            qr : qrCodeImage,
+          }          
+
+          const PDFhtml = await fs.promises.readFile("src/views/pdf/ticket.ejs", "utf8");
+          const PDFTemplate = ejs.render(PDFhtml, PDFVariables);           
+          const filename = `Tiket Himalaya - ${findToken?.token.split('-')[1]}.pdf`;          
+          const filePath = `storage/${filename}`;          
+          const buffer = await htmlPDF.create(PDFTemplate, {path : filePath});           
+          res.sendFile(path.join(process.cwd(), filePath));
+        
+      } 
+
+      res.sendFile(file);
+
+    });
+
   } catch (err) {
-    console.log(err);
-    res.send("Gagal bikin pdf");
+    console.error(err);
+    return res.status(500).send({
+      code : 500, 
+      message : "Internal Server Error : " + err.message
+    });
   }
 };
 
-module.exports = { print };
+module.exports = { downloadTicket };

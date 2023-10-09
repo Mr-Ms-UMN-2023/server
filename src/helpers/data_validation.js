@@ -4,7 +4,7 @@ const isValidEmail = (email) => {
 }
 
 const isValidPhoneNumber = (phoneNumber) => {
-    const pattern = /^\d{9,14}$/;
+    const pattern = /^\d{9,12}$/;
     return pattern.test(phoneNumber);
 }
 
@@ -12,9 +12,16 @@ const isValidName = (name) => {
     return name.length > 0;
 }
 
+const isPositiveInteger = (input) => {
+    const num = parseInt(input);
+    if (!parseInt) return false;
+    return num > 0;
+}
+
 
 module.exports = {
     isValidEmail, 
     isValidPhoneNumber,
-    isValidName
+    isValidName,
+    isPositiveInteger
 }

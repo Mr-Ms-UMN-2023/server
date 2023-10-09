@@ -10,8 +10,14 @@ const Transaction = require('../models/Transaction');
 const nodeMailer = require('../config/mail');
 const router = express.Router();
 const User = require('../models/User');
+const QRToken = require('../models/QRToken');
+const Product = require('../models/Product');
+const nodeHtmlToImage = require('node-html-to-image')
+const knex = require('../database/knex');
 const { createError } = require('../helpers/request_validation');
-const products = require('../config/products');
+const htmlPDF = require("puppeteer-html-pdf");
+const QRCode = require("qrcode");
+const readFile = require("util").promisify(fs.readFile);
 const { sendEmail } = require('../helpers/mailer');
 const validator = require('../helpers/data_validation');
 const ValidationException = require('../exceptions/ValidationException');
@@ -21,21 +27,35 @@ const { midtransCore, midtransSnap } = require("../config/midtrans");
 const orderTicket = async (req, res) => {
     const validationInfoList = [];    
     try {
-        const { nama = "", email, whatsapp } = req.body;
+        const { nama = "", email, whatsapp, jumlah = 0, item_id = "(TESTING)_TICKET_HIMALAYA" } = req.body;
 
         if (!validator.isValidName(nama)) validationInfoList.push(createError("nama", "Nama tidak boleh kosong."));
         if (!validator.isValidEmail(email)) validationInfoList.push(createError("email", "Format email tidak valid."));
         if (!validator.isValidPhoneNumber(whatsapp)) validationInfoList.push(createError("whatsapp", "Nomor telepon tidak valid."));
-  
+        if (!validator.isPositiveInteger(jumlah)) validationInfoList.push(createError("jumlah", "Jumlah tiket harus berupa angka bulat."));
+      
         if (validationInfoList.length > 0){
           throw new ValidationException(400, "Input tidak valid", "INVALID_INPUT");
         }
   
-        const transaction_id = randomToken(32);
-  
+        const transaction_id =  "MRMS2023-" + new Date().getTime();
+
         const userData = {
             id : uuid(),
             nama, email, whatsapp
+        }
+
+        const item = await Product.query()
+          .where({id : item_id})
+          .first();
+
+        if (!item){
+            throw new ValidationException(404, "Produk tidak ditemukan", "PRODUCT_NOT_FOUND");         
+        }
+
+
+        if (item.reserved + jumlah > item.quota){
+          throw new ValidationException(403, "Kuota tiket sudah habis.", "PRODUCT_UNAVAILABLE");              
         }
   
         // ini nanti custom lagi sesuai row seat nya
@@ -45,24 +65,35 @@ const orderTicket = async (req, res) => {
   
         // DETAIL TIKET MASIH TESTING
         const body = {
-            transaction_details: {
-              order_id: "MRMS2023-" + transaction_id,
-              gross_amount: products.ticket?.price, 
-            },
-            credit_card: {
-              secure: true,
-            },
-            item_details: [
-              {...products.ticket, quantity : 1}
-            ],
-            customer_details: userData
-          };    
+          transaction_details: {
+            order_id:  transaction_id,
+            gross_amount: item.harga * jumlah, 
+          },
+          credit_card: {
+            secure: true,
+          },
+          item_details: [
+            {
+              id: item.id,
+              price: item.harga,
+              name: item.nama,
+              quantity : jumlah                
+            }
+          ],
+          customer_details: userData
+        };   
   
   
           Model.transaction(async (trx) => {
+
+            await Product.query()
+              .where({id : item.id})
+              .update({reserved : parseInt(item.reserved, 10) + parseInt(jumlah, 10)})
   
             await Transaction.query().insert({
               id : body.transaction_details.order_id,
+              item_id : item.id, 
+              quantity : jumlah,
               status : null,
             });
   
@@ -80,7 +111,7 @@ const orderTicket = async (req, res) => {
           });        
   
           const token = await midtransSnap.createTransactionToken(body);      
-          console.log(token);
+
           return res.status(201).send({
             code : 201, 
             message : "Berhasil menukar token snap.",
@@ -106,19 +137,30 @@ const orderTicket = async (req, res) => {
 
 
 const paymentNotification = async (req, res) => {
-    console.log("body", req.body);
+
     try {
+
         const payload = req.body;
         const { transaction_status, order_id } = payload;
-    
-        const transactionData = await Transaction.query()
-          .where({
-            id: order_id,
-            status : "settlement"
-          })
+
+        
+        const transactionData = await Audience.query()
+          .select(
+              'transactions.id AS order_id', 
+              'himalaya_audiences.id AS user_id', 
+              'transactions.status AS status', 
+              'himalaya_audiences.nama AS nama',
+              'himalaya_audiences.email AS email',
+              'transactions.quantity AS quantity',
+              'himalaya_items.nama AS item_name')
+          .join('transactions', 'transactions.id', '=', 'himalaya_audiences.transaction_id')
+          .join('himalaya_items', 'himalaya_items.id', '=', 'transactions.item_id')
+          .where({'transactions.id' : order_id})
           .first();
+
+
     
-        if (transactionData) {
+        if (transactionData && transactionData?.status == 'settlement') {
             return res.status(208).json({
               status: "SUCCESS",
               type: "PAID",
@@ -130,7 +172,15 @@ const paymentNotification = async (req, res) => {
          
         if (transaction_status == "settlement") {
 
-            const token = "MRMS23-" + randomToken(32);
+
+            const QRTokens = [];
+            for (let count = 0; count < transactionData.quantity; count++){
+              const token = "MRMS23-" + randomToken(32);
+              console.log(token);
+              QRTokens.push({token, audience_id : transactionData.user_id});
+            }
+            console.log(QRTokens);
+
   
             Model.transaction(async (trx) => {
                 await Transaction.query()
@@ -141,11 +191,10 @@ const paymentNotification = async (req, res) => {
                         status: "settlement",
                     });       
                     
-                await Audience.query()
-                    .where({
-                        transaction_id: order_id,
-                    })
-                    .update({token}); 
+                // await QRToken.query()
+                //     .insert(QRTokens);
+                await knex('himalaya_qr_tokens').insert(QRTokens); 
+
             }).catch((err) => {
                 console.error(err);
                 return res.status(500).send({
@@ -154,17 +203,14 @@ const paymentNotification = async (req, res) => {
                 });
               });
               
-            const customer = await Audience.query()
-                .where({
-                    transaction_id: order_id,
-                })
-                .first();
-
             
             
             const htmlDir = path.join(process.cwd(), "/src/views/mail/ticket.ejs");
+
+
+           
               
-            fs.readFile(htmlDir, 'utf-8', (err, html) => {
+            fs.readFile(htmlDir, 'utf-8', async (err, html) => {
                 if (err) {
                     console.error('Error reading HTML for email : ' + err);
                     return res.status(200).json({
@@ -174,17 +220,38 @@ const paymentNotification = async (req, res) => {
                         message: "Pembayaran berhasil dilakukan namun ada permasalahan dengan pengiriman email.",
                     });                         
                 }
+            
+                const attachments = [];
+                let index = 0;
+                for (let ticket of QRTokens){
+                  console.log(ticket);
+                  const qrCodeImage = await QRCode.toDataURL(ticket?.token);
 
-                const { nama, email } = customer;
+                  const PDFVariables = {
+                    nama : transactionData.nama, 
+                    qr : qrCodeImage,
+                  }
+                             
+
+                  const PDFhtml = await fs.promises.readFile("src/views/pdf/ticket.ejs", "utf8");
+                  const PDFTemplate = ejs.render(PDFhtml, PDFVariables); 
+                  
+                  const filename = `Tiket Himalaya - ${ticket?.token.split('-')[1]}.pdf`;
+                  const path = `storage/${filename}`;
+                  const buffer = await htmlPDF.create(PDFTemplate, {path});               
+                  attachments.push({filename, path});
+                }
+
+                const { nama, email } = transactionData;
 
                 const variables = {nama}
 
                 const renderHtml = ejs.render(html, variables);
                 
-                sendEmail(email, "Ticket Himalaya", renderHtml);
+                sendEmail(email, "[ Tiket Himalaya MR & MS UMN 2023 ]", renderHtml, attachments);
                 
             });
-            console.log("berhasil!");
+
             return res.status(200).json({
                 status: "SUCCESS",
                 type: "PAYMENT_SETTLEMENT",
@@ -193,16 +260,27 @@ const paymentNotification = async (req, res) => {
             });              
          
         
-
-        // send email di akhir
         } if (transaction_status == "pending") {
-            await Transaction.query()
-                .where({
-                    id: order_id,
-                })
-                .update({
-                    status: "pending",
-                });
+          
+            console.log(payload);
+            Model.transaction(async (trx) => {
+
+              await Transaction.query()
+                  .where({
+                      id: order_id,
+                  })
+                  .update({
+                      status: "pending",
+                  });
+
+            }).catch((err) => {
+              console.error(err);
+              return res.status(500).send({
+                code : 500, 
+                message : "Internal Server Error : " + err.message
+              });
+            });
+
 
             return res.status(200).json({
                 status: "SUCCESS",
@@ -213,13 +291,26 @@ const paymentNotification = async (req, res) => {
             });
         }
 
-        await Transaction.query()
-            .where({
-                id: order_id,
-            })
-            .update({
-                status: transaction_status,
-            });      
+        Model.transaction(async (trx) => {
+
+          await Transaction.query()
+          .where({
+              id: order_id,
+          })
+          .update({
+              status: transaction_status,
+          });  
+
+        }).catch((err) => {
+          console.error(err);
+          return res.status(500).send({
+            code : 500, 
+            message : "Internal Server Error : " + err.message
+          });
+        });
+
+
+    
 
         return res.status(200).json({
             status: "SUCCESS",
@@ -239,7 +330,6 @@ const paymentNotification = async (req, res) => {
                 code : err.code, 
                 type : err.type,
                 message : err.message, 
-                error : validationInfoList
               });            
         }        
 
@@ -252,7 +342,47 @@ const paymentNotification = async (req, res) => {
 }
 
 
+const getTicketString = async (req, res) => {
+
+    try {
+        const { token = "" } = req.params; 
+
+        const data = await QRToken.query()
+          .where({token})
+          .first();
+
+        if (!data){
+          throw new ValidationException(404, "Token tidak ditemukan.", "INVALID_TOKEN");
+        }
+
+        return res.status(200).json({
+          code: 200,          
+          type: "SUCCESS",
+          message: "Berhasil mendapatkan token QR.",
+          data : {token : data.token}
+      });          
+
+    } catch (err) {
+
+      if (err instanceof ValidationException){
+          return res.status(err.code).send({
+              code : err.code, 
+              type : err.type,
+              message : err.message, 
+            });            
+      }
+
+      console.error(err);
+      return res.status(500).send({
+        code : 500, 
+        message : "Internal Server Error : " + err.message
+      });
+    }
+}
+
+
 module.exports = {
     orderTicket,
-    paymentNotification
+    paymentNotification,
+    getTicketString
 }

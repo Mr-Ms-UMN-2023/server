@@ -1,13 +1,13 @@
 const nodeMailer = require('../config/mail');
 
-const sendEmail = (destination, subject, html) => {
+const sendEmail = (destination, subject, html, attachments) => {
     const options = {
         from : process.env.MAIL_ACCOUNT, 
         to : destination, 
         subject, 
-        html
+        html,
+        attachments
     }
-    console.log(options);
     nodeMailer.sendMail(options);
 }
 
