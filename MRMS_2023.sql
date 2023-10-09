@@ -208,7 +208,7 @@ CREATE TABLE `himalaya_audiences` (
   `created_at` datetime DEFAULT NOW(),  
   `updated_at` datetime DEFAULT NOW(),
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`transaction_id`) REFERENCES transactions (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+  FOREIGN KEY (`transaction_id`) REFERENCES transactions (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
