@@ -10,14 +10,15 @@ const invalidateTransaction = require('./src/cron/invalidate_transaction');
 const PORT = process.env.PORT;
 const APP_URL = process.env.APP_URL;
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public"));
-app.use(express.static("storage"));
+
 app.use(cors({
   origin : '*',
   credentials : true,
 }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public"));
+app.use(express.static("storage"));
 app.use(fileUpload());
 
 
