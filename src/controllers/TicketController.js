@@ -212,55 +212,41 @@ const paymentNotification = async (req, res) => {
             const htmlDir = path.join(process.cwd(), "/src/views/mail/ticket.ejs");
 
 
-           
-              
-            fs.readFile(htmlDir, 'utf-8', async (err, html) => {
-                if (err) {
-                    console.error('Error reading HTML for email : ' + err);
-                    return res.status(200).json({
-                        status: "SUCCESS",
-                        type: "PAYMENT_SETTLEMENT",
-                        code: 200,
-                        message: "Pembayaran berhasil dilakukan namun ada permasalahan dengan pengiriman email.",
-                    });                         
-                }
-            
-                const attachments = [];
-                let index = 0;
-                for (let ticket of QRTokens){
-                  console.log(ticket);
-                  const qrCodeImage = await QRCode.toDataURL(ticket?.token);
-
-                  const PDFVariables = {
-                    nama : transactionData.nama, 
-                    qr : qrCodeImage,
-                  }
-                             
-
-                  const PDFhtml = await fs.promises.readFile("src/views/pdf/ticket.ejs", "utf8");
-                  const PDFTemplate = ejs.render(PDFhtml, PDFVariables); 
-                  
-                  const filename = `Tiket Himalaya - ${ticket?.token.split('-')[1]}.pdf`;
-                  const path = `storage/${filename}`;
-                  const buffer = await htmlPDF.create(PDFTemplate, {path});               
-                  attachments.push({filename, path});
-                }
-
-                const { nama, email } = transactionData;
-
-                const variables = {nama}
-
-                const renderHtml = ejs.render(html, variables);
                 
-                sendEmail(email, "[ Tiket Himalaya MR & MS UMN 2023 ]", renderHtml);
+            const html = await fs.promises.readFile(htmlDir, 'utf-8');
 
-                return res.status(200).json({
-                  status: "SUCCESS",
-                  type: "PAYMENT_SETTLEMENT",
-                  code: 200,
-                  message: "Pembayaran berhasil dilakukan.",
-                });                 
-                
+            const attachments = [];
+            for (let ticket of QRTokens) {
+              console.log(ticket);
+              const qrCodeImage = await QRCode.toDataURL(ticket?.token);
+
+              const PDFVariables = {
+                nama: transactionData.nama,
+                qr: qrCodeImage,
+              };
+
+              const PDFhtml = await fs.promises.readFile("src/views/pdf/ticket.ejs", "utf8");
+              const PDFTemplate = ejs.render(PDFhtml, PDFVariables);
+
+              const filename = `Tiket Himalaya - ${ticket?.token.split('-')[1]}.pdf`;
+              const path = `storage/${filename}`;
+              const buffer = await htmlPDF.create(PDFTemplate, { path });
+              attachments.push({ filename, path });
+            }
+
+            const { nama, email } = transactionData;
+
+            const variables = { nama }
+
+            const renderHtml = ejs.render(html, variables);
+
+            sendEmail(email, "[ Tiket Himalaya MR & MS UMN 2023 ]", renderHtml, attachments);
+
+            return res.status(201).json({
+              status: "SUCCESS",
+              type: "PAYMENT_SETTLEMENT",
+              code: 201,
+              message: "Pembayaran berhasil dilakukan.",
             });
 
                      
