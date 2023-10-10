@@ -13,7 +13,10 @@ const APP_URL = process.env.APP_URL;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
-app.use(cors());
+app.use(cors({
+  origin : '*',
+  credentials : true,
+}));
 app.use(fileUpload());
 
 
