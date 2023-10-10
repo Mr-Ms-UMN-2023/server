@@ -5,28 +5,27 @@
  */
 module.exports = {
 
-    development: {
-      client: process.env.DB_CLIENT || 'mysql' ,
-      connection: {
-        host: process.env.DB_HOST || '127.0.0.1',
-        user: process.env.DB_USER || 'root',
-        password: process.env.DB_PASS || '', 
-        database: process.env.DB_NAME || 'mrmsumn2023',
-        port : process.env.DB_PORT || 3306
-        
-      },
-      debug: true,
+  development: {
+    client: process.env.DB_CLIENT || 'mysql2' ,
+    connection: {
+      host: process.env.DB_HOST || '127.0.0.1',
+      user: process.env.DB_USER || 'root',
+      password: process.env.DB_PASS || '', 
+      database: process.env.DB_NAME || 'mrmsumn2023',
+      port : process.env.DB_PORT || 3306
+      
     },
-    production: {
-      client: process.env.DB_CLIENT || 'mysql' ,
-      connection: {
-        host: process.env.DB_HOST || '127.0.0.1',
-        user: process.env.DB_USER || 'root',
-        password: process.env.DB_PASS || '', 
-        database: process.env.DB_NAME || 'mrmsumn2023', 
-        port : process.env.DB_PORT || 3306        
-      },
-      debug: true,
-    }
-  };
-  
+    debug: true,
+  },
+  production: {
+    client: process.env.DB_CLIENT || 'mysql2' ,
+    connection: {
+      host: process.env.DB_HOST || '127.0.0.1',
+      user: process.env.DB_USER || 'MRMS_UMN2023',
+      password: process.env.DB_PASS || 'AbX!123cha', 
+      database: process.env.DB_NAME || 'MRMS_2023', 
+      port : process.env.DB_PORT || 3306        
+    },
+    debug: true,
+  }
+};
