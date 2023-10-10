@@ -253,16 +253,17 @@ const paymentNotification = async (req, res) => {
                 const renderHtml = ejs.render(html, variables);
                 
                 sendEmail(email, "[ Tiket Himalaya MR & MS UMN 2023 ]", renderHtml, attachments);
+
+                return res.status(200).json({
+                  status: "SUCCESS",
+                  type: "PAYMENT_SETTLEMENT",
+                  code: 200,
+                  message: "Pembayaran berhasil dilakukan.",
+                });                 
                 
             });
 
-            return res.status(200).json({
-                status: "SUCCESS",
-                type: "PAYMENT_SETTLEMENT",
-                code: 200,
-                message: "Pembayaran berhasil dilakukan.",
-            });              
-         
+                     
         
         } if (transaction_status == "pending") {
           
