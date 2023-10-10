@@ -252,7 +252,7 @@ const paymentNotification = async (req, res) => {
 
                 const renderHtml = ejs.render(html, variables);
                 
-                sendEmail(email, "[ Tiket Himalaya MR & MS UMN 2023 ]", renderHtml, attachments);
+                sendEmail(email, "[ Tiket Himalaya MR & MS UMN 2023 ]", renderHtml);
 
                 return res.status(200).json({
                   status: "SUCCESS",
