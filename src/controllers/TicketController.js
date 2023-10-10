@@ -95,11 +95,14 @@ const orderTicket = async (req, res) => {
               item_id : item.id, 
               quantity : jumlah,
               status : null,
+              payment_init_time : new Date(),
             });
   
             await Audience.query().insert({
               ...userData, 
               transaction_id : body.transaction_details.order_id,
+              created_at : new Date(),
+              updated_at : new Date(),
             });
   
           }).catch((err) => {
@@ -189,6 +192,7 @@ const paymentNotification = async (req, res) => {
                     })
                     .update({
                         status: "settlement",
+                        payment_done_time : new Date()
                     });       
                     
                 // await QRToken.query()

@@ -178,7 +178,7 @@ CREATE TABLE `peserta_2023` (
 
 
 CREATE TABLE `himalaya_items` (
-  `id` VARCHAR(255), 
+  `id` VARCHAR(100), 
   `nama` VARCHAR(255),
   `deskripsi` VARCHAR(255), 
   `quota` INTEGER,
@@ -192,29 +192,29 @@ CREATE TABLE `transactions` (
   `id` VARCHAR(50),
   `status` VARCHAR(30) NULL,
   `quantity` INTEGER, 
-  `item_id` VARCHAR(255),
-  `payment_init_time` datetime DEFAULT NOW(),
+  `item_id` VARCHAR(100),
+  `payment_init_time` datetime NULL DEFAULT NULL,
   `payment_done_time` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`item_id`) REFERENCES `himalaya_items` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `himalaya_audiences` (
-  `id` VARCHAR(255), 
+  `id` VARCHAR(100), 
   `nama` VARCHAR(255), 
   `email` VARCHAR(255), 
   `whatsapp` VARCHAR(50),
   `transaction_id` VARCHAR(50) NULL,
-  `created_at` datetime DEFAULT NOW(),  
-  `updated_at` datetime DEFAULT NOW(),
+  `created_at` datetime NULL DEFAULT NULL, 
+  `updated_at` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`transaction_id`) REFERENCES transactions (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 CREATE TABLE `himalaya_qr_tokens` (
-  `token` VARCHAR(255), 
-  `audience_id` VARCHAR(255), 
+  `token` VARCHAR(100), 
+  `audience_id` VARCHAR(100), 
   PRIMARY KEY (`token`), 
   FOREIGN KEY (`audience_id`) REFERENCES `himalaya_audiences` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
