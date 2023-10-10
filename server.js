@@ -11,14 +11,12 @@ const PORT = process.env.PORT;
 const APP_URL = process.env.APP_URL;
 
 
-app.use(cors({
-  origin : '*',
-  credentials : true,
-}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
-app.use(express.static("storage"));
+// app.use(express.static("storage"));
+app.use(cors())
 app.use(fileUpload());
 
 
