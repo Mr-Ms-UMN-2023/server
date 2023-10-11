@@ -1,6 +1,6 @@
 const nodeMailer = require('../config/mail');
 
-const sendEmail = (destination, subject, html, attachments = []) => {
+const sendEmail = (destination, subject, html, attachments = [], cb) => {
     const options = {
         from : process.env.MAIL_ACCOUNT, 
         to : destination, 
@@ -8,7 +8,7 @@ const sendEmail = (destination, subject, html, attachments = []) => {
         html,
         attachments
     }
-    nodeMailer.sendMail(options);
+    nodeMailer.sendMail(options, cb);
 }
 
 module.exports = {sendEmail}
