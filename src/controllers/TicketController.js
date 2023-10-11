@@ -8,6 +8,7 @@ const randomToken = require("random-token");
 const Audience = require('../models/Audience');
 const Transaction = require('../models/Transaction');
 const nodeMailer = require('../config/mail');
+const html_to_pdf = require('html-pdf-node');
 const router = express.Router();
 const User = require('../models/User');
 const QRToken = require('../models/QRToken');
@@ -54,7 +55,7 @@ const orderTicket = async (req, res) => {
         }
 
 
-        if (item.reserved + jumlah > item.quota){
+        if (parseInt(item.reserved, 10) + parseInt(jumlah, 10) > item.quota){
           throw new ValidationException(403, "Kuota tiket sudah habis.", "PRODUCT_UNAVAILABLE");              
         }
   
@@ -179,10 +180,8 @@ const paymentNotification = async (req, res) => {
             const QRTokens = [];
             for (let count = 0; count < transactionData.quantity; count++){
               const token = "MRMS23-" + randomToken(32);
-              console.log(token);
               QRTokens.push({token, audience_id : transactionData.user_id});
             }
-            console.log(QRTokens);
 
   
             Model.transaction(async (trx) => {
@@ -229,19 +228,42 @@ const paymentNotification = async (req, res) => {
               const PDFTemplate = ejs.render(PDFhtml, PDFVariables);
 
               const filename = `Tiket Himalaya - ${ticket?.token.split('-')[1]}.pdf`;
-              const path = `storage/${filename}`;
-              const buffer = await htmlPDF.create(PDFTemplate, { path });
-              attachments.push({ filename, path });
+              const pathName = `storage/${filename}`;
+
+              // --- PUPPEETER-HTML-PDF
+
+              const options = { 
+                format: 'A4',
+                path: pathName, 
+                // path: `${__dirname}/${filename}`
+              }
+              await htmlPDF.create(PDFTemplate, options);
+              // --- HTML-PDF-NODE
+              // let options = { format: 'A4' };
+
+              // let file = [{ 
+              //   content : PDFTemplate, 
+        
+              // }];              
+
+              // console.log(PDFTemplate);
+                            
+              // html_to_pdf.generatePdf(file, options).then(buffer => {
+              //   fs.writeFile(pathName, buffer, (err) => {
+              //       if (err) throw new Error(err.message);
+              //   })
+              // });           
+
+              attachments.push({ filename, path : pathName});
             }
 
             const { nama, email } = transactionData;
-
             const variables = { nama }
 
             const renderHtml = ejs.render(html, variables);
 
             sendEmail(email, "[ Tiket Himalaya MR & MS UMN 2023 ]", renderHtml, attachments);
-
+            
             return res.status(201).json({
               status: "SUCCESS",
               type: "PAYMENT_SETTLEMENT",
