@@ -48,10 +48,9 @@ const downloadTicket = async (req, res) => {
           
           pdf.create(PDFTemplate).toStream(function(err, stream){
             stream.pipe(fs.createWriteStream(pathName));
+            res.sendFile(path.join(process.cwd(), filePath));            
           });                
 
-          res.sendFile(path.join(process.cwd(), filePath));
-        
       } 
 
       res.sendFile(file);
