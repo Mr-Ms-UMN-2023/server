@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const ejs = require('ejs');
+const puppeteer = require('puppeteer');
 const { v4: uuid } = require('uuid');
 const { Model } = require("objection");
 const randomToken = require("random-token");
@@ -214,6 +215,8 @@ const paymentNotification = async (req, res) => {
                 
             const html = await fs.promises.readFile(htmlDir, 'utf-8');
 
+    
+
             const attachments = [];
             for (let ticket of QRTokens) {
               console.log(ticket);
@@ -227,6 +230,10 @@ const paymentNotification = async (req, res) => {
               const PDFhtml = await fs.promises.readFile("src/views/pdf/ticket.ejs", "utf8");
               const PDFTemplate = ejs.render(PDFhtml, PDFVariables);
 
+              const browser = await puppeteer.launch();
+              const page = await browser.newPage();                      
+              await page.goto(`data:text/html,${PDFTemplate}`, { waitUntil: 'networkidle0' });              
+
               const filename = `Tiket Himalaya - ${ticket?.token.split('-')[1]}.pdf`;
               const pathName = `storage/${filename}`;
 
@@ -237,7 +244,12 @@ const paymentNotification = async (req, res) => {
                 path: pathName, 
                 // path: `${__dirname}/${filename}`
               }
-              await htmlPDF.create(PDFTemplate, options);
+
+              await page.pdf(options)              
+              await browser.close()
+
+
+              // await htmlPDF.create(PDFTemplate, options);
               // --- HTML-PDF-NODE
               // let options = { format: 'A4' };
 
