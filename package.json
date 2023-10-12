@@ -30,6 +30,7 @@
     "node-html-to-image": "^4.0.0",
     "nodemailer": "^6.9.5",
     "objection": "^3.1.2",
+    "puppeteer": "^21.3.8",
     "puppeteer-html-pdf": "^2.2.0",
     "qrcode": "^1.5.3",
     "random-token": "^0.0.8",
