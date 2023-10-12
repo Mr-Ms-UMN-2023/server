@@ -7,6 +7,7 @@ const Transaction = require('../models/Transaction');
 const Audience = require('../models/Audience');
 const QRToken = require('../models/QRToken');
 const QRCode = require("qrcode");
+const pdf = require('html-pdf');
 const ejs = require("ejs");
 
 
@@ -44,7 +45,11 @@ const downloadTicket = async (req, res) => {
           const PDFTemplate = ejs.render(PDFhtml, PDFVariables);           
           const filename = `Tiket Himalaya - ${findToken?.token.split('-')[1]}.pdf`;          
           const filePath = `storage/${filename}`;          
-          const buffer = await htmlPDF.create(PDFTemplate, {path : filePath});           
+          
+          pdf.create(PDFTemplate).toStream(function(err, stream){
+            stream.pipe(fs.createWriteStream(pathName));
+          });                
+
           res.sendFile(path.join(process.cwd(), filePath));
         
       } 
