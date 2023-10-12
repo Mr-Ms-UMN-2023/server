@@ -262,22 +262,20 @@ const paymentNotification = async (req, res) => {
 
             const renderHtml = ejs.render(html, variables);
 
-            // , (err, data) => {
+            sendEmail(email, "[ Tiket Himalaya MR & MS UMN 2023 ]", renderHtml, attachments, (err, data) => {
 
-            //   if (err) {
-            //     console.log("Error sending email : ", err.message);
-            //   }
+              if (err) {
+                console.log("Error sending email : ", err.message);
+              }
 
-            //   for (let file of attachments){
-            //     fs.unlink(file?.path, (err) => {
-            //       if (err) {
-            //         console.error(`Error deleting file: ${err}`);
-            //       } 
-            //     });
-            //   }
-            // }
-
-            sendEmail(email, "[ Tiket Himalaya MR & MS UMN 2023 ]", renderHtml, attachments);
+              for (let file of attachments){
+                fs.unlink(file?.path, (err) => {
+                  if (err) {
+                    console.error(`Error deleting file: ${err}`);
+                  } 
+                });
+              }
+            });
 
             return res.status(201).json({
               status: "SUCCESS",
