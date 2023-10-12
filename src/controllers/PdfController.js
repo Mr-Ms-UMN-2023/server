@@ -50,11 +50,7 @@ const downloadTicket = async (req, res) => {
             stream.pipe(fs.createWriteStream(filePath));
             res.sendFile(path.join(process.cwd(), filePath));            
           });                
-
       } 
-
-      res.sendFile(file);
-
     });
 
   } catch (err) {
