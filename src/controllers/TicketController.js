@@ -210,61 +210,45 @@ const paymentNotification = async (req, res) => {
               
             
             
-            const htmlDir = path.join(process.cwd(), "/src/views/mail/ticket.ejs");
+            const headerHtmlDir = path.join(process.cwd(), "/src/views/mail/ticket_header.ejs");                
+            const headerHtml = await fs.promises.readFile(headerHtmlDir, 'utf-8');
 
+            const pageHtmlDir = path.join(process.cwd(), "/src/views/mail/ticket_page.ejs");    
+            const pageHtml = await fs.promises.readFile(pageHtmlDir, 'utf-8');
 
-                
-            const html = await fs.promises.readFile(htmlDir, 'utf-8');
+            const footerHtmlDir = path.join(process.cwd(), "/src/views/mail/ticket_footer.ejs");                
+            const footerHtml = await fs.promises.readFile(footerHtmlDir, 'utf-8');            
 
-    
+            let fullHtml = ejs.render(headerHtml);
 
             const attachments = [];
             for (let ticket of QRTokens) {
-              console.log(ticket);
               const qrCodeImage = await QRCode.toDataURL(ticket?.token);
 
-              const PDFVariables = {
+              const pageVariables = {
                 nama: transactionData.nama,
                 qr: qrCodeImage,
               };
 
-              const PDFhtml = await fs.promises.readFile("src/views/pdf/ticket.ejs", "utf8");
-              const PDFTemplate = ejs.render(PDFhtml, PDFVariables);
+              const pageHtml = ejs.render(pageHtml, pageVariables);
+              fullHtml += pageHtml;
 
-
-              const filename = `Tiket Himalaya - ${ticket?.token.split('-')[1]}.pdf`;
-              const pathName = `storage/${filename}`;
-
-              pdf.create(PDFTemplate).toStream(function(err, stream){
-                stream.pipe(fs.createWriteStream(pathName));
-              });              
-
-              // --- PUPPEETER-HTML-PDF
-
-              const options = { 
-                format: 'A4',
-                path: pathName, 
-              }
-
-              // --- HTML-PDF-NODE
-              // let options = { format: 'A4' };
-
-              // let file = [{ 
-              //   content : PDFTemplate, 
-        
-              // }];              
-
-              // console.log(PDFTemplate);
-                            
-              // html_to_pdf.generatePdf(file, options).then(buffer => {
-              //   fs.writeFile(pathName, buffer, (err) => {
-              //       if (err) throw new Error(err.message);
-              //   })
-              // });           
-
-              attachments.push({ filename, path : pathName});
+  
             }
 
+            fullHtml += footerHtml;
+
+            const filename = `Tiket Himalaya - MR. & MS. UMN 2023.pdf`;
+            const pathName = `storage/${filename}`;            
+
+            attachments.push({filename, path : pathName});
+
+            pdf.create(PDFTemplate).toStream(function(err, stream){
+              stream.pipe(fs.createWriteStream(pathName));
+            });
+
+
+            // email
             const { nama, email } = transactionData;
             const variables = { nama }
 
@@ -283,6 +267,9 @@ const paymentNotification = async (req, res) => {
                   } 
                 });
               }
+
+
+
             });
 
             return res.status(201).json({
