@@ -3,46 +3,63 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Tiket Himalaya - MR. & MS. UMN 2023</title>
   </head>
-  <body class="flex flex-col items-center bg-[#f0f0f0] p-[2rem]">
-    <div class="flex flex-col bg-[#fafafa] w-screen max-w-[600px] p-[2rem]">
+  <body
+    style="
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #f0f0f0;
+      padding: 2rem;
+    ">
+    <div
+      style="
+        display: flex;
+        flex-direction: column;
+        background: #fafafa;
+        width: 100vw;
+        max-width: 600px;
+        padding: 2rem;
+      ">
       <img
-        class="w-fill"
+        style="width: 100%"
         src="https://cdn.discordapp.com/attachments/1125453534062719016/1162302877507784704/Banner_Ticket.png?ex=653b71e8&is=6528fce8&hm=b97686cec57f00ef08a7b30985c857004429ae330f7fa8b19e53a57afd92992a&" />
 
-      <div class="text-[1.2rem]">Hi <%= nama %></div>
-      <div class="mt-[1rem]">Selamat pembelian tiket anda telah berhasil</div>
+      <div style="font-size: 1.2rem">Hi Koong,</div>
+      <div style="margin-top: 1rem">
+        Selamat pembelian tiket anda telah berhasil
+      </div>
       <div>
         Silahkan unduh tiket untuk
         <b>HIMALAYA: Awarding Night Mr. & Ms. UMN 2023</b>
         pada lampiran email ini
       </div>
-      <div class="mt-[2rem]">
+      <div style="margin-top: 1.2rem">
         Jangan lupa untuk hadir pada waktu dan tanggal berikut:
       </div>
-      <div class="flex">
+      <div style="display: flex">
         <div>
           <div>Waktu Open Gate</div>
           <div>Tanggal</div>
           <div>Tempat</div>
         </div>
-        <div class="ml-[1rem] font-bold">
+        <div style="margin-left: 1rem; font-weight: bold">
           <div>: 16.00 - 18.00 WIB</div>
           <div>: 24 November 2023</div>
           <div>: QBIG Convention Hall</div>
         </div>
       </div>
-      <div class="bg-[#fff0a1] p-[1rem] mt-[2rem]">
-        <div class="font-bold">Tips:</div>
+      <div style="background-color: #fff0a1; padding: 1rem; margin-top: 2rem">
+        <div style="font-weight: bold">Tips:</div>
         <div>
           Unduh tiketmu pada lampiran email ini sebelum datang dan menghadari
           acara HIMALAYA: Awarding Night Mr. & Ms. UMN 2023.
         </div>
       </div>
-      <div class="font-bold mt-[2rem]">Rincian Item</div>
-      <div class="flex">
+      <div style="font-weight: bold; margin-top: 2rem">Rincian Item</div>
+      <div style="display: flex">
         <div>
           <div>No Pesanan</div>
           <div>Pesanan</div>
@@ -52,37 +69,65 @@
           <div>Email</div>
         </div>
 
-        <div class="pl-[1rem] font-bold">
-          <div>: <%= transaction_id %></div>
+        <div style="padding-left: 1rem; font-weight: bold">
+          <div>: <%= transaction_id %> </div>
           <div>: HIMALAYA: Awarding Night Mr. & Ms. UMN 2023</div>
-          <div>: <%= jumlah_ticket %></div>
-          <div>: <%= nama %></div>
-          <div>: <%= wa %></div>
-          <div>: <%= email %></div>
+          <div>: <%= jumlah_ticket %> </div>
+          <div>: <%= nama %> </div>
+          <div>: <%= wa %> </div>
+          <div>: <%= email %> </div>
         </div>
       </div>
-      <div class="mt-[2rem] flex justify-center items-center font-bold">
+      <div
+        style="
+          margin-top: 2rem;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        ">
         <button
-          href="https://mrms.umn.ac.id/e-ticket?id=<%= transaction_id %>"
-          class="bg-[#fff0a1] p-[1rem] rounded-[1rem]">
+          style="
+            font-weight: bold;
+            background-color: #fff0a1;
+            padding: 1rem;
+            border-radius: 1rem;
+            border: none;
+          "
+          href="https://mrms.umn.ac.id/e-tiket?id= <%= transaction_id %>">
           Lihat E-Tiket Anda
         </button>
       </div>
     </div>
     <div
-      class="flex flex-col mt-[2rem] p-[1rem] w-screen max-w-[600px] bg-[#fafafa]">
-      <div class="font-bold">Butuh Bantuan?</div>
+      style="
+        display: flex;
+        flex-direction: column;
+        margin-top: 2rem;
+        padding: 2rem;
+        width: 100vw;
+        max-width: 600px;
+        background-color: #fafafa;
+      ">
+      <div style="font-weight: bold">Butuh Bantuan?</div>
       <a
         href="https://docs.google.com/forms/d/e/1FAIpQLSedPpIfUO3BUyl6p7Cn-CzQqyBzqrSDnfpSbLhzl2HPrN4OaQ/viewform"
         ><div>Form Kendala Tiket Himalaya</div></a
       >
     </div>
-    <div class="mt-[2rem] flex flex-col items-center">
+    <div
+      style="
+        margin-top: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      ">
       <img
-        class="w-[5rem]"
+        style="width: 5rem"
         src="https://cdn.discordapp.com/attachments/1062052561068228688/1065503219209478184/Logo_Mr___Ms_UMN_2023_-_Circle_copy.png?ex=6539f933&is=65278433&hm=c8b2e66028ddf0407cdad16f335eddbca1c1b3b8006c59232c5abb6f49f2bb27&" />
       <a href="https://mrms.umn.ac.id/ticket-himalaya"
-        ><div class="font-bold">https://mrms.umn.ac.id/ticket-himalaya</div></a
+        ><div style="font-weight: bold">
+          https://mrms.umn.ac.id/ticket-himalaya
+        </div></a
       >
       <div>Copyright Ⓒ 2023 Mr. & Ms. UMN. All rights reserved</div>
     </div>
