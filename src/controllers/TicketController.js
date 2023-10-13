@@ -210,13 +210,13 @@ const paymentNotification = async (req, res) => {
               
             
             
-            const headerHtmlDir = path.join(process.cwd(), "/src/views/mail/ticket_header.ejs");                
+            const headerHtmlDir = path.join(process.cwd(), "/src/views/pdf/ticket_header.ejs");                
             const headerHtml = await fs.promises.readFile(headerHtmlDir, 'utf-8');
 
-            const pageHtmlDir = path.join(process.cwd(), "/src/views/mail/ticket_page.ejs");    
+            const pageHtmlDir = path.join(process.cwd(), "/src/views/pdf/ticket_page.ejs");    
             const pageHtml = await fs.promises.readFile(pageHtmlDir, 'utf-8');
 
-            const footerHtmlDir = path.join(process.cwd(), "/src/views/mail/ticket_footer.ejs");                
+            const footerHtmlDir = path.join(process.cwd(), "/src/views/pdf/ticket_footer.ejs");                
             const footerHtml = await fs.promises.readFile(footerHtmlDir, 'utf-8');            
 
             let fullHtml = ejs.render(headerHtml);
@@ -243,7 +243,7 @@ const paymentNotification = async (req, res) => {
 
             attachments.push({filename, path : pathName});
 
-            pdf.create(PDFTemplate).toStream(function(err, stream){
+            pdf.create(fullHtml).toStream(function(err, stream){
               stream.pipe(fs.createWriteStream(pathName));
             });
 
@@ -252,6 +252,8 @@ const paymentNotification = async (req, res) => {
             const { nama, email } = transactionData;
             const variables = { nama }
 
+            const emailHtmlDir = path.join(process.cwd(), "/src/views/mail/ticket.ejs");                 
+            const html = await fs.promises.readFile(emailHtmlDir, 'utf-8');
             const renderHtml = ejs.render(html, variables);
 
             sendEmail(email, "[ Tiket Himalaya MR & MS UMN 2023 ]", renderHtml, attachments, (err, data) => {
