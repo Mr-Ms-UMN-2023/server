@@ -237,7 +237,8 @@ const paymentNotification = async (req, res) => {
             const attachments = [];
             let index = 0;
             let pdfVariables = {
-              pages : []
+              pages : [], 
+              total : length,
             };
             const length = QRTokens.length;
 
@@ -251,7 +252,6 @@ const paymentNotification = async (req, res) => {
                 qr: qrCodeImage,
                 ticket_token : ticket?.token, 
                 ticket_number : index++ + 1,
-                total : length
               };
 
               pdfVariables.pages.push(pageVariables);
