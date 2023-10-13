@@ -35,9 +35,9 @@ const invalidateTransaction = async (req, res) => {
               .delete();
             
             await Product.query()
-              .where({ id : "(TESTING)_TICKET_HIMALAYA"})
+              .where({ id : "Earlybird"})
               .patch({
-                reserved : knex.raw(`reserved + ${reserved}`)
+                reserved : knex.raw(`reserved - ${reserved}`)
               });   
 
         }).catch((err) => {

@@ -62,7 +62,7 @@ const orderTicket = async (req, res) => {
         }
 
         const max = 4;
-        if (parseInt(jumlah, 10) >= max){
+        if (parseInt(jumlah, 10) > max){
           throw new ValidationException(403, `Jumlah pembelian maksimal untuk satu sesi pembayaran adalah ${max} tiket.`, "LIMITED_PURCHASE");            
         }
   
