@@ -250,7 +250,8 @@ const paymentNotification = async (req, res) => {
                 email : transactionData.email,
                 qr: qrCodeImage,
                 ticket_token : ticket?.token, 
-                ticket_number : index + 1
+                ticket_number : index + 1,
+                total : length
               };
 
               pdfVariables.pages.push(pageVariables);
@@ -265,7 +266,7 @@ const paymentNotification = async (req, res) => {
 
             }
 
-            
+
             const pdfHtmlDoc = ejs.render(fullTicketHtml, pdfVariables);
 
             // fullHtml += footerHtml;
