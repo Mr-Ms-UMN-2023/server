@@ -67,33 +67,34 @@
         </div>
 
         <div style="padding-left: 1rem; font-weight: bold">
-            <div>: <%= transaction_id %> </div>
-            <div>: HIMALAYA: Awarding Night Mr. & Ms. UMN 2023</div>
-            <div>: <%= jumlah_ticket %> </div>
-            <div>: <%= nama %> </div>
-            <div>: <%= wa %> </div>
-            <div>: <%= email %> </div>
+          <div>: <%= transaction_id %></div>
+          <div>: HIMALAYA: Awarding Night Mr. & Ms. UMN 2023</div>
+          <div>: <%= jumlah_ticket %></div>
+          <div>: <%= nama %></div>
+          <div>: <%= wa %></div>
+          <div>: <%= email %></div>
         </div>
       </div>
-      <div
-        style="
-          margin-top: 2rem;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        ">
-        <button
+      <a href="https://mrms.umn.ac.id/e-tiket?id=<%= transaction_id %>">
+        <div
           style="
-            font-weight: bold;
-            background-color: #fff0a1;
-            padding: 1rem;
-            border-radius: 1rem;
-            border: none;
-          "
-          href="https://mrms.umn.ac.id/e-tiket?id=koong">
-          Lihat E-Tiket Anda
-        </button>
-      </div>
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          ">
+          <button
+            style="
+              font-weight: bold;
+              background-color: #fff0a1;
+              padding: 1rem;
+              border-radius: 1rem;
+              border: none;
+            ">
+            Lihat E-Tiket Anda
+          </button>
+        </div>
+      </a>
     </div>
     <div
       style="
