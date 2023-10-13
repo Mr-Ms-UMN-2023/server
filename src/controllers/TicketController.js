@@ -446,8 +446,51 @@ const getTicketString = async (req, res) => {
 }
 
 
+
+const getTicketStringsByOrderID = async (req, res) => {
+      try {
+        const { order_id = "" } = req.params; 
+
+        const data = await Transaction.query()
+          .select('himalaya_qr_tokens.token AS token')
+          .join('himalaya_audiences', 'himalaya_audiences.transaction_id', '=', 'transactions.id')          
+          .join('himalaya_qr_tokens', 'himalaya_qr_tokens.audience_id', '=', 'himalaya_audiences.id')
+          .where({'transactions.id' : order_id})
+
+
+        if (!data){
+          throw new ValidationException(404, "Token tidak ditemukan.", "INVALID_TOKEN");
+        }
+
+        return res.status(200).json({
+          code: 200,          
+          type: "SUCCESS",
+          message: "Berhasil mendapatkan token QR.",
+          data
+      });          
+
+    } catch (err) {
+
+      if (err instanceof ValidationException){
+          return res.status(err.code).send({
+              code : err.code, 
+              type : err.type,
+              message : err.message, 
+            });            
+      }
+
+      console.error(err);
+      return res.status(500).send({
+        code : 500, 
+        message : "Internal Server Error : " + err.message
+      });
+}  
+}
+
+
 module.exports = {
     orderTicket,
     paymentNotification,
-    getTicketString
+    getTicketString, 
+    getTicketStringsByOrderID
 }
