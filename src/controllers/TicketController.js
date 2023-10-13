@@ -60,6 +60,11 @@ const orderTicket = async (req, res) => {
         if (parseInt(item.reserved, 10) + parseInt(jumlah, 10) > item.quota){
           throw new ValidationException(403, "Kuota tiket sudah habis.", "PRODUCT_UNAVAILABLE");              
         }
+
+        const max = 4;
+        if (parseInt(jumlah, 10) >= max){
+          throw new ValidationException(403, `Jumlah pembelian maksimal untuk satu sesi pembayaran adalah ${max} tiket.`, "LIMITED_PURCHASE");            
+        }
   
         // ini nanti custom lagi sesuai row seat nya
         // ada VIP, jadi mungkin ada conditional buat VIP
