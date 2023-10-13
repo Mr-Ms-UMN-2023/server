@@ -1,4 +1,55 @@
-<div style="page-break-after:always">
-    Ada tiket bang, <%= nama %>
-    <img src="<%= qr %>" alt="QR Code" />    
-</div>
+<div class="w-screen p-[1rem]" style="page-break-after:always">
+    <img
+      class="w-full h-[8rem] object-cover"
+      src="<%= qr %>"
+      alt="QR Code" />
+    <div class="flex w-fill items-stretch">
+      <div class="w-1/2 items-center">
+        <p class="font-bold">Ticket 1 of <%= ticket_number %></p>
+        <img class="w-full" src="<%= qr %>" />
+      </div>
+      <div class="w-1/2 flex flex-col justify-center">
+        <div class="text-start">
+          <div>Tiket No. / No. Tiket</div>
+          <div class="font-bold text-lg"><%= ticket_token %></div>
+        </div>
+        <div class="text-start mt-[1rem]">
+          <div>Name / Nama</div>
+          <div class="font-bold text-lg"><%= nama %></div>
+        </div>
+        <div class="text-start mt-[1rem]">
+          <div>Email</div>
+          <div class="font-bold text-lg"><%= email %></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="font-bold">Awarding Night Mr. & Ms. UMN 2023</div>
+      <div class="flex mt-[1rem]">
+        <div class="w-1/4">
+          <div></div>
+          <div>Open Gate</div>
+          <div>Vanue Event</div>
+        </div>
+        <div class="w-3/4 font-bold">
+          <div>: 16.00 - 18.00 WIB</div>
+          <div>: Q BIG Convention Hall</div>
+        </div>
+      </div>
+      <div class="mt-[2rem]">
+        <p class="font-bold">Syarat & Ketentuan</p>
+        <p class="font-bold mt-[1rem]">Umum</p>
+        <p>1. Harga belum termasuk biaya administrasi.</p>
+        <p>2. Pembeli wajib megisi data diri pribadi saat memsan.</p>
+        <p>3. Tiket yang sudah dibeli tidak dapat dikembalikan.</p>
+
+        <p class="font-bold mt-[1rem]">E-tiket</p>
+        <p>1. E-Tiket tidak dapat dikembalikan</p>
+        <p>2. Kehilangan E-Tiket merupakan tanggung jawab pemegang</p>
+        <p>
+          3. Masing - masing E-ticket akan ditukarkan pada tanggal kegiatan
+          untuk memilih tempat duduk.
+        </p>
+      </div>
+    </div>
+  </div>

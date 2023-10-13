@@ -232,7 +232,10 @@ const paymentNotification = async (req, res) => {
 
               const pageVariables = {
                 nama: transactionData.nama,
+                email : transactionData.email,
                 qr: qrCodeImage,
+                ticket_token : ticket?.token, 
+                ticket_number : index + 1
               };
 
               
