@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const ejs = require('ejs');
 const puppeteer = require('puppeteer');
+const axios = require('axios');
 var pdf = require('html-pdf');
 const { v4: uuid } = require('uuid');
 const { Model } = require("objection");
@@ -216,23 +217,31 @@ const paymentNotification = async (req, res) => {
               
             
             
-            const headerHtmlDir = path.join(process.cwd(), "/src/views/pdf/ticket_header.ejs");                
-            const headerHtml = await fs.promises.readFile(headerHtmlDir, 'utf-8');
+            // const headerHtmlDir = path.join(process.cwd(), "/src/views/pdf/ticket_header.ejs");                
+            // const headerHtml = await fs.promises.readFile(headerHtmlDir, 'utf-8');
 
-            const pageHtmlDir = path.join(process.cwd(), "/src/views/pdf/ticket_page.ejs");    
-            const pageHtml = await fs.promises.readFile(pageHtmlDir, 'utf-8');
+            // const pageHtmlDir = path.join(process.cwd(), "/src/views/pdf/ticket_page.ejs");    
+            // const pageHtml = await fs.promises.readFile(pageHtmlDir, 'utf-8');
             
-            const lastHtmlDir = path.join(process.cwd(), "/src/views/pdf/ticket_page_last.ejs");    
-            const lastHtml = await fs.promises.readFile(lastHtmlDir, 'utf-8');
+            // const lastHtmlDir = path.join(process.cwd(), "/src/views/pdf/ticket_page_last.ejs");    
+            // const lastHtml = await fs.promises.readFile(lastHtmlDir, 'utf-8');
 
-            const footerHtmlDir = path.join(process.cwd(), "/src/views/pdf/ticket_footer.ejs");                
-            const footerHtml = await fs.promises.readFile(footerHtmlDir, 'utf-8');            
+            // const footerHtmlDir = path.join(process.cwd(), "/src/views/pdf/ticket_footer.ejs");                
+            // const footerHtml = await fs.promises.readFile(footerHtmlDir, 'utf-8');            
 
-            let fullHtml = ejs.render(headerHtml);
+            const fullTicketHtmlDir = path.join(process.cwd(), "/src/views/pdf/ticket.ejs");  
+            const fullTicketHtml = await fs.promises.readFile(fullTicketHtmlDir, 'utf-8');
+
+            // let fullHtml = ejs.render(headerHtml);
 
             const attachments = [];
             let index = 0;
+            let pdfVariables = {
+              pages : []
+            };
             const length = QRTokens.length;
+
+        
             for (let ticket of QRTokens) {
               const qrCodeImage = await QRCode.toDataURL(ticket?.token);
 
@@ -244,28 +253,29 @@ const paymentNotification = async (req, res) => {
                 ticket_number : index + 1
               };
 
-              
-              if (index++ == QRTokens.length - 1){
-                const ticketHtml = ejs.render(lastHtml, pageVariables);
-                fullHtml += ticketHtml;
-              } else {
-                const ticketHtml = ejs.render(pageHtml, pageVariables);
-                fullHtml += ticketHtml;                
-              }
+              pdfVariables.pages.push(pageVariables);
+    
+              // if (index++ == QRTokens.length - 1){
+              //   const ticketHtml = ejs.render(lastHtml, pageVariables);
+              //   fullHtml += ticketHtml;
+              // } else {
+              //   const ticketHtml = ejs.render(pageHtml, pageVariables);
+              //   fullHtml += ticketHtml;                
+              // }
 
-  
             }
 
-            fullHtml += footerHtml;
+            
+            const pdfHtmlDoc = ejs.render(fullTicketHtml, pdfVariables);
+
+            // fullHtml += footerHtml;
 
             const filename = `Tiket Himalaya - MR. & MS. UMN 2023.pdf`;
             const pathName = `storage/${filename}`;            
 
             attachments.push({filename, path : pathName});
 
-            pdf.create(fullHtml, {
-              height : "1200px",              
-            }).toStream(function(err, stream){
+            pdf.create(pdfHtmlDoc).toStream(function(err, stream){
               stream.pipe(fs.createWriteStream(pathName));
             });
 
