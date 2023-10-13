@@ -216,7 +216,7 @@ const paymentNotification = async (req, res) => {
             const pageHtmlDir = path.join(process.cwd(), "/src/views/pdf/ticket_page.ejs");    
             const pageHtml = await fs.promises.readFile(pageHtmlDir, 'utf-8');
             
-            const lastHtmlDir = path.join(process.cwd(), "/src/views/pdf/ticket_last.ejs");    
+            const lastHtmlDir = path.join(process.cwd(), "/src/views/pdf/ticket_page_last.ejs");    
             const lastHtml = await fs.promises.readFile(lastHtmlDir, 'utf-8');
 
             const footerHtmlDir = path.join(process.cwd(), "/src/views/pdf/ticket_footer.ejs");                
