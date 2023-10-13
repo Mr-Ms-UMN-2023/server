@@ -225,7 +225,7 @@ const paymentNotification = async (req, res) => {
             let fullHtml = ejs.render(headerHtml);
 
             const attachments = [];
-            const index = 0;
+            let index = 0;
             const length = QRTokens.length;
             for (let ticket of QRTokens) {
               const qrCodeImage = await QRCode.toDataURL(ticket?.token);
