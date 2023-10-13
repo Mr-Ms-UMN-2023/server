@@ -30,7 +30,7 @@ const { midtransCore, midtransSnap } = require("../config/midtrans");
 const orderTicket = async (req, res) => {
     const validationInfoList = [];    
     try {
-        const { nama = "", email, whatsapp, jumlah = 0, item_id = "(TESTING)_TICKET_HIMALAYA" } = req.body;
+        const { nama = "", email, whatsapp, jumlah = 0, item_id = "Earlybird" } = req.body;
 
         if (!validator.isValidName(nama)) validationInfoList.push(createError("nama", "Nama tidak boleh kosong."));
         if (!validator.isValidEmail(email)) validationInfoList.push(createError("email", "Format email tidak valid."));
