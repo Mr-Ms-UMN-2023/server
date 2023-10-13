@@ -263,9 +263,7 @@ const paymentNotification = async (req, res) => {
             attachments.push({filename, path : pathName});
 
             pdf.create(fullHtml, {
-              height : "800px",
-              width : "950px", 
-              
+              height : "1200px",              
             }).toStream(function(err, stream){
               stream.pipe(fs.createWriteStream(pathName));
             });
