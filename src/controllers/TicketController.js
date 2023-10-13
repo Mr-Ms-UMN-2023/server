@@ -236,11 +236,11 @@ const paymentNotification = async (req, res) => {
 
             const attachments = [];
             let index = 0;
+            const length = QRTokens.length;
             let pdfVariables = {
               pages : [], 
               total : length,
-            };
-            const length = QRTokens.length;
+            };            
 
         
             for (let ticket of QRTokens) {
