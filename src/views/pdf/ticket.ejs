@@ -7,80 +7,175 @@
   </head>
 
   <body>
-    <div
-      style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
-      class="w-screen p-[1rem]">
-      <div>
-        <img
-          style="width: 100%"
-          src="https://cdn.discordapp.com/attachments/1125453534062719016/1162302877507784704/Banner_Ticket.png?ex=653b71e8&is=6528fce8&hm=b97686cec57f00ef08a7b30985c857004429ae330f7fa8b19e53a57afd92992a&"
-          alt="" />
-      </div>
 
-      <div class="flex w-fill items-stretch" style="display: flex; width: 100%">
-        <div class="w-1/2 items-center" style="width: 50%">
-          <p style="font-weight: bold">Ticket <%= ticket_number %> of <%= length %></p>
+
+    <% for (var i = 0; i < pages.length; i++) { %>
+
+
+      <% if (i == (total - 1)) { %>
+
+      
+        <div
+        style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
+        class="w-screen p-[1rem]">
+        <div>
           <img
             style="width: 100%"
-            src="https://image-charts.com/chart?
-chs=150x150&cht=qr&chl=Hello%20world&choe=UTF-8" />
+            src="https://cdn.discordapp.com/attachments/1125453534062719016/1162302877507784704/Banner_Ticket.png?ex=653b71e8&is=6528fce8&hm=b97686cec57f00ef08a7b30985c857004429ae330f7fa8b19e53a57afd92992a&"
+            alt="" />
         </div>
-        <div
-          style="width: 50%; margin: auto auto"
-          class="w-1/2 flex flex-col justify-center">
-          <div class="text-start">
-            <div>Tiket No. / No. Tiket</div>
-            <div style="font-weight: bold"><%= ticket_token %></div>
-          </div>
-          <div style="margin-top: 1rem" class="text-start mt-[1rem]">
-            <div>Name / Nama</div>
-            <div style="font-weight: bold"><%= nama %></div>
-          </div>
-          <div style="margin-top: 1rem" class="text-start mt-[1rem]">
-            <div>Email</div>
-            <div style="font-weight: bold"><%= email %></div>
-          </div>
-        </div>
-      </div>
-      <div>
-        <div style="font-weight: bold" class="font-bold">
-          Awarding Night Mr. & Ms. UMN 2023
-        </div>
-        <div style="display: flex; margin-top: 1rem" class="flex mt-[1rem]">
-          <div style="margin-right: 1rem" class="w-1/4">
-            <div></div>
-            <div>Open Gate</div>
-            <div>Vanue Event</div>
-          </div>
-          <div style="font-weight: bold" class="w-3/4 font-bold">
-            <div>: 16.00 - 18.00 WIB</div>
-            <div>: Q BIG Convention Hall</div>
-          </div>
-        </div>
-        <div style="margin-top: 2rem" class="mt-[2rem]">
-          <p style="font-weight: bold" class="font-bold">Syarat & Ketentuan</p>
-          <p
-            style="font-weight: bold; margin-top: 1rem"
-            class="font-bold mt-[1rem]">
-            Umum
-          </p>
-          <p>1. Harga belum termasuk biaya administrasi.</p>
-          <p>2. Pembeli wajib megisi data diri pribadi saat memsan.</p>
-          <p>3. Tiket yang sudah dibeli tidak dapat dikembalikan.</p>
 
-          <p
-            style="font-weight: bold; margin-top: 1rem"
-            class="font-bold mt-[1rem]">
-            E-tiket
-          </p>
-          <p>1. E-Tiket tidak dapat dikembalikan</p>
-          <p>2. Kehilangan E-Tiket merupakan tanggung jawab pemegang</p>
-          <p>
-            3. Masing - masing E-ticket akan ditukarkan pada tanggal kegiatan
-            untuk memilih tempat duduk.
-          </p>
+        <div class="flex w-fill items-stretch" style="display: flex; width: 100%">
+          <div class="w-1/2 items-center" style="width: 50%">
+            <p style="font-weight: bold">Ticket <%= pages[i].ticket_number %> of <%= total %></p>
+            <img
+              style="width: 100%"
+              src="<%= pages[i].qr %>" />
+          </div>
+          <div
+            style="width: 50%; margin: auto auto"
+            class="w-1/2 flex flex-col justify-center">
+            <div class="text-start">
+              <div>Tiket No. / No. Tiket</div>
+              <div style="font-weight: bold"><%= pages[i].ticket_token %></div>
+            </div>
+            <div style="margin-top: 1rem" class="text-start mt-[1rem]">
+              <div>Name / Nama</div>
+              <div style="font-weight: bold"><%= pages[i].nama %></div>
+            </div>
+            <div style="margin-top: 1rem" class="text-start mt-[1rem]">
+              <div>Email</div>
+              <div style="font-weight: bold"><%= pages[i].email %></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div style="font-weight: bold" class="font-bold">
+            Awarding Night Mr. & Ms. UMN 2023
+          </div>
+          <div style="display: flex; margin-top: 1rem" class="flex mt-[1rem]">
+            <div style="margin-right: 1rem" class="w-1/4">
+              <div></div>
+              <div>Open Gate</div>
+              <div>Vanue Event</div>
+            </div>
+            <div style="font-weight: bold" class="w-3/4 font-bold">
+              <div>: 16.00 - 18.00 WIB</div>
+              <div>: Q BIG Convention Hall</div>
+            </div>
+          </div>
+          <div style="margin-top: 2rem" class="mt-[2rem]">
+            <p style="font-weight: bold" class="font-bold">Syarat & Ketentuan</p>
+            <p
+              style="font-weight: bold; margin-top: 1rem"
+              class="font-bold mt-[1rem]">
+              Umum
+            </p>
+            <p>1. Harga belum termasuk biaya administrasi.</p>
+            <p>2. Pembeli wajib megisi data diri pribadi saat memsan.</p>
+            <p>3. Tiket yang sudah dibeli tidak dapat dikembalikan.</p>
+
+            <p
+              style="font-weight: bold; margin-top: 1rem"
+              class="font-bold mt-[1rem]">
+              E-tiket
+            </p>
+            <p>1. E-Tiket tidak dapat dikembalikan</p>
+            <p>2. Kehilangan E-Tiket merupakan tanggung jawab pemegang</p>
+            <p>
+              3. Masing - masing E-ticket akan ditukarkan pada tanggal kegiatan
+              untuk memilih tempat duduk.
+            </p>
+          </div>
         </div>
       </div>
-    </div>
+
+
+      <% } else { %>
+
+
+        <div
+        style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; page-break-after: always;"
+        class="w-screen p-[1rem]">
+        <div>
+          <img
+            style="width: 100%"
+            src="https://cdn.discordapp.com/attachments/1125453534062719016/1162302877507784704/Banner_Ticket.png?ex=653b71e8&is=6528fce8&hm=b97686cec57f00ef08a7b30985c857004429ae330f7fa8b19e53a57afd92992a&"
+            alt="" />
+        </div>
+
+        <div class="flex w-fill items-stretch" style="display: flex; width: 100%">
+          <div class="w-1/2 items-center" style="width: 50%">
+            <p style="font-weight: bold">Ticket <%= pages[i].ticket_number %> of <%= total %></p>
+            <img
+              style="width: 100%"
+              src="<%= pages[i].qr %>" />
+          </div>
+          <div
+            style="width: 50%; margin: auto auto"
+            class="w-1/2 flex flex-col justify-center">
+            <div class="text-start">
+              <div>Tiket No. / No. Tiket</div>
+              <div style="font-weight: bold"><%= pages[i].ticket_token %></div>
+            </div>
+            <div style="margin-top: 1rem" class="text-start mt-[1rem]">
+              <div>Name / Nama</div>
+              <div style="font-weight: bold"><%= pages[i].nama %></div>
+            </div>
+            <div style="margin-top: 1rem" class="text-start mt-[1rem]">
+              <div>Email</div>
+              <div style="font-weight: bold"><%= pages[i].email %></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div style="font-weight: bold" class="font-bold">
+            Awarding Night Mr. & Ms. UMN 2023
+          </div>
+          <div style="display: flex; margin-top: 1rem" class="flex mt-[1rem]">
+            <div style="margin-right: 1rem" class="w-1/4">
+              <div></div>
+              <div>Open Gate</div>
+              <div>Vanue Event</div>
+            </div>
+            <div style="font-weight: bold" class="w-3/4 font-bold">
+              <div>: 16.00 - 18.00 WIB</div>
+              <div>: Q BIG Convention Hall</div>
+            </div>
+          </div>
+          <div style="margin-top: 2rem" class="mt-[2rem]">
+            <p style="font-weight: bold" class="font-bold">Syarat & Ketentuan</p>
+            <p
+              style="font-weight: bold; margin-top: 1rem"
+              class="font-bold mt-[1rem]">
+              Umum
+            </p>
+            <p>1. Harga belum termasuk biaya administrasi.</p>
+            <p>2. Pembeli wajib megisi data diri pribadi saat memsan.</p>
+            <p>3. Tiket yang sudah dibeli tidak dapat dikembalikan.</p>
+
+            <p
+              style="font-weight: bold; margin-top: 1rem"
+              class="font-bold mt-[1rem]">
+              E-tiket
+            </p>
+            <p>1. E-Tiket tidak dapat dikembalikan</p>
+            <p>2. Kehilangan E-Tiket merupakan tanggung jawab pemegang</p>
+            <p>
+              3. Masing - masing E-ticket akan ditukarkan pada tanggal kegiatan
+              untuk memilih tempat duduk.
+            </p>
+          </div>
+        </div>
+      </div>        
+
+
+        
+      <% } %>
+
+
+   
+
+    <% } %>    
   </body>
 </html>
