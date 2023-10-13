@@ -230,7 +230,7 @@ const paymentNotification = async (req, res) => {
                 qr: qrCodeImage,
               };
 
-              const pageHtml = ejs.render(pageHtml, pageVariables);
+              const ticketHtml = ejs.render(pageHtml, pageVariables);
               fullHtml += pageHtml;
 
   
