@@ -215,6 +215,9 @@ const paymentNotification = async (req, res) => {
 
             const pageHtmlDir = path.join(process.cwd(), "/src/views/pdf/ticket_page.ejs");    
             const pageHtml = await fs.promises.readFile(pageHtmlDir, 'utf-8');
+            
+            const lastHtmlDir = path.join(process.cwd(), "/src/views/pdf/ticket_last.ejs");    
+            const lastHtml = await fs.promises.readFile(lastHtmlDir, 'utf-8');
 
             const footerHtmlDir = path.join(process.cwd(), "/src/views/pdf/ticket_footer.ejs");                
             const footerHtml = await fs.promises.readFile(footerHtmlDir, 'utf-8');            
@@ -222,6 +225,8 @@ const paymentNotification = async (req, res) => {
             let fullHtml = ejs.render(headerHtml);
 
             const attachments = [];
+            const index = 0;
+            const length = QRTokens.length;
             for (let ticket of QRTokens) {
               const qrCodeImage = await QRCode.toDataURL(ticket?.token);
 
@@ -230,8 +235,14 @@ const paymentNotification = async (req, res) => {
                 qr: qrCodeImage,
               };
 
-              const ticketHtml = ejs.render(pageHtml, pageVariables);
-              fullHtml += pageHtml;
+              
+              if (index++ == QRTokens.length - 1){
+                const ticketHtml = ejs.render(lastHtml, pageVariables);
+                fullHtml += ticketHtml;
+              } else {
+                const ticketHtml = ejs.render(pageHtml, pageVariables);
+                fullHtml += ticketHtml;                
+              }
 
   
             }
