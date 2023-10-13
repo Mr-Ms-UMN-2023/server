@@ -7,65 +7,66 @@
   </head>
 
   <body>
+    <% for (var i = 0; i < pages.length; i++) { %> <% if (i == (total - 1)) { %>
 
+    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">
+      <div>
+        <img
+          style="width: 100%"
+          src="https://cdn.discordapp.com/attachments/1125453534062719016/1162302877507784704/Banner_Ticket.png?ex=653b71e8&is=6528fce8&hm=b97686cec57f00ef08a7b30985c857004429ae330f7fa8b19e53a57afd92992a&"
+          alt="" />
+      </div>
+      <p style="font-weight: bold; padding: 2rem">
+        Ticket <%= pages[i].ticket_number %> of <%= total %>
+      </p>
+      <table style="width: 100%">
+        <tr>
+          <td style="width: 50%">
+            <img style="width: 100%" src="<%= pages[i].qr %>" />
+          </td>
 
-    <% for (var i = 0; i < pages.length; i++) { %>
-
-
-      <% if (i == (total - 1)) { %>
-
-      
-        <div
-        style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
-        class="w-screen p-[1rem]">
-        <div>
-          <img
-            style="width: 100%"
-            src="https://cdn.discordapp.com/attachments/1125453534062719016/1162302877507784704/Banner_Ticket.png?ex=653b71e8&is=6528fce8&hm=b97686cec57f00ef08a7b30985c857004429ae330f7fa8b19e53a57afd92992a&"
-            alt="" />
-        </div>
-
-        <div class="flex w-fill items-stretch" style="display: flex; width: 100%">
-          <div class="w-1/2 items-center" style="width: 50%">
-            <p style="font-weight: bold">Ticket <%= pages[i].ticket_number %> of <%= total %></p>
-            <img
-              style="width: 100%"
-              src="<%= pages[i].qr %>" />
-          </div>
-          <div
-            style="width: 50%; margin: auto auto"
-            class="w-1/2 flex flex-col justify-center">
-            <div class="text-start">
+          <td style="margin: auto auto; width: 50%">
+            <div>
               <div>Tiket No. / No. Tiket</div>
               <div style="font-weight: bold"><%= pages[i].ticket_token %></div>
             </div>
-            <div style="margin-top: 1rem" class="text-start mt-[1rem]">
+            <div style="margin-top: 1rem">
               <div>Name / Nama</div>
               <div style="font-weight: bold"><%= pages[i].nama %></div>
             </div>
-            <div style="margin-top: 1rem" class="text-start mt-[1rem]">
+            <div style="margin-top: 1rem">
               <div>Email</div>
               <div style="font-weight: bold"><%= pages[i].email %></div>
             </div>
-          </div>
+          </td>
+        </tr>
+      </table>
+      <div style="padding: 2rem">
+        <hr />
+        <div style="font-weight: bold; margin-top: 1rem">
+          Awarding Night Mr. & Ms. UMN 2023
         </div>
-        <div>
-          <div style="font-weight: bold" class="font-bold">
-            Awarding Night Mr. & Ms. UMN 2023
-          </div>
-          <div style="display: flex; margin-top: 1rem" class="flex mt-[1rem]">
-            <div style="margin-right: 1rem" class="w-1/4">
-              <div></div>
+
+        <div style="font-weight: bold; font-size: 30px">Earlybird Sale</div>
+        <table style="margin-top: 1rem">
+          <tr>
+            <td>
               <div>Open Gate</div>
+              <div>Date</div>
               <div>Vanue Event</div>
-            </div>
-            <div style="font-weight: bold" class="w-3/4 font-bold">
+            </td>
+            <td style="font-weight: bold">
               <div>: 16.00 - 18.00 WIB</div>
+              <div>: 24 November 2023</div>
               <div>: Q BIG Convention Hall</div>
-            </div>
-          </div>
-          <div style="margin-top: 2rem" class="mt-[2rem]">
-            <p style="font-weight: bold" class="font-bold">Syarat & Ketentuan</p>
+            </td>
+          </tr>
+        </table>
+        <hr />
+
+        <div>
+          <div style="margin-top: 2rem">
+            <p style="font-weight: bold">Syarat & Ketentuan</p>
             <p
               style="font-weight: bold; margin-top: 1rem"
               class="font-bold mt-[1rem]">
@@ -75,11 +76,7 @@
             <p>2. Pembeli wajib megisi data diri pribadi saat memsan.</p>
             <p>3. Tiket yang sudah dibeli tidak dapat dikembalikan.</p>
 
-            <p
-              style="font-weight: bold; margin-top: 1rem"
-              class="font-bold mt-[1rem]">
-              E-tiket
-            </p>
+            <p style="font-weight: bold; margin-top: 1rem">E-tiket</p>
             <p>1. E-Tiket tidak dapat dikembalikan</p>
             <p>2. Kehilangan E-Tiket merupakan tanggung jawab pemegang</p>
             <p>
@@ -89,62 +86,73 @@
           </div>
         </div>
       </div>
+      <!--       
+          <div style="display: flex; width: 100%">
+            <div style="width: 50%"></div>
+            <div style="width: 50%; margin: auto auto"></div>
+          </div> -->
+    </div>
 
+    <% } else { %>
 
-      <% } else { %>
+    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">
+      <div>
+        <img
+          style="width: 100%"
+          src="https://cdn.discordapp.com/attachments/1125453534062719016/1162302877507784704/Banner_Ticket.png?ex=653b71e8&is=6528fce8&hm=b97686cec57f00ef08a7b30985c857004429ae330f7fa8b19e53a57afd92992a&"
+          alt="" />
+      </div>
+      <p style="font-weight: bold; padding: 2rem">
+        Ticket <%= pages[i].ticket_number %> of <%= total %>
+      </p>
+      <table style="width: 100%">
+        <tr>
+          <td style="width: 50%">
+            <img style="width: 100%" src="<%= pages[i].qr %>" />
+          </td>
 
-
-        <div
-        style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; page-break-after: always;"
-        class="w-screen p-[1rem]">
-        <div>
-          <img
-            style="width: 100%"
-            src="https://cdn.discordapp.com/attachments/1125453534062719016/1162302877507784704/Banner_Ticket.png?ex=653b71e8&is=6528fce8&hm=b97686cec57f00ef08a7b30985c857004429ae330f7fa8b19e53a57afd92992a&"
-            alt="" />
-        </div>
-
-        <div class="flex w-fill items-stretch" style="display: flex; width: 100%">
-          <div class="w-1/2 items-center" style="width: 50%">
-            <p style="font-weight: bold">Ticket <%= pages[i].ticket_number %> of <%= total %></p>
-            <img
-              style="width: 100%"
-              src="<%= pages[i].qr %>" />
-          </div>
-          <div
-            style="width: 50%; margin: auto auto"
-            class="w-1/2 flex flex-col justify-center">
-            <div class="text-start">
+          <td style="margin: auto auto; width: 50%">
+            <div>
               <div>Tiket No. / No. Tiket</div>
               <div style="font-weight: bold"><%= pages[i].ticket_token %></div>
             </div>
-            <div style="margin-top: 1rem" class="text-start mt-[1rem]">
+            <div style="margin-top: 1rem">
               <div>Name / Nama</div>
               <div style="font-weight: bold"><%= pages[i].nama %></div>
             </div>
-            <div style="margin-top: 1rem" class="text-start mt-[1rem]">
+            <div style="margin-top: 1rem">
               <div>Email</div>
               <div style="font-weight: bold"><%= pages[i].email %></div>
             </div>
-          </div>
+          </td>
+        </tr>
+      </table>
+      <div style="padding: 2rem">
+        <hr />
+        <div style="font-weight: bold; margin-top: 1rem">
+          Awarding Night Mr. & Ms. UMN 2023
         </div>
-        <div>
-          <div style="font-weight: bold" class="font-bold">
-            Awarding Night Mr. & Ms. UMN 2023
-          </div>
-          <div style="display: flex; margin-top: 1rem" class="flex mt-[1rem]">
-            <div style="margin-right: 1rem" class="w-1/4">
-              <div></div>
+
+        <div style="font-weight: bold; font-size: 30px">Earlybird Sale</div>
+        <table style="margin-top: 1rem">
+          <tr>
+            <td>
               <div>Open Gate</div>
+              <div>Date</div>
               <div>Vanue Event</div>
-            </div>
-            <div style="font-weight: bold" class="w-3/4 font-bold">
+            </td>
+            <td style="font-weight: bold">
               <div>: 16.00 - 18.00 WIB</div>
+              <div>: 24 November 2023</div>
               <div>: Q BIG Convention Hall</div>
-            </div>
-          </div>
-          <div style="margin-top: 2rem" class="mt-[2rem]">
-            <p style="font-weight: bold" class="font-bold">Syarat & Ketentuan</p>
+            </td>
+          </tr>
+        </table>
+        <hr />
+
+        <div>
+          <div style="margin-top: 2rem">
+            <p style="font-weight: bold">Syarat & Ketentuan</p>
             <p
               style="font-weight: bold; margin-top: 1rem"
               class="font-bold mt-[1rem]">
@@ -154,11 +162,7 @@
             <p>2. Pembeli wajib megisi data diri pribadi saat memsan.</p>
             <p>3. Tiket yang sudah dibeli tidak dapat dikembalikan.</p>
 
-            <p
-              style="font-weight: bold; margin-top: 1rem"
-              class="font-bold mt-[1rem]">
-              E-tiket
-            </p>
+            <p style="font-weight: bold; margin-top: 1rem">E-tiket</p>
             <p>1. E-Tiket tidak dapat dikembalikan</p>
             <p>2. Kehilangan E-Tiket merupakan tanggung jawab pemegang</p>
             <p>
@@ -167,15 +171,14 @@
             </p>
           </div>
         </div>
-      </div>        
+      </div>
+      <!--       
+          <div style="display: flex; width: 100%">
+            <div style="width: 50%"></div>
+            <div style="width: 50%; margin: auto auto"></div>
+          </div> -->
+    </div>
 
-
-        
-      <% } %>
-
-
-   
-
-    <% } %>    
+    <% } %> <% } %>
   </body>
 </html>
