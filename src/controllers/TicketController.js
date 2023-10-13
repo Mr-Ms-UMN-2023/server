@@ -250,7 +250,7 @@ const paymentNotification = async (req, res) => {
                 email : transactionData.email,
                 qr: qrCodeImage,
                 ticket_token : ticket?.token, 
-                ticket_number : index + 1,
+                ticket_number : index++ + 1,
                 total : length
               };
 
