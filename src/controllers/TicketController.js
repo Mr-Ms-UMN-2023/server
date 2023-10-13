@@ -162,6 +162,7 @@ const paymentNotification = async (req, res) => {
               'transactions.status AS status', 
               'himalaya_audiences.nama AS nama',
               'himalaya_audiences.email AS email',
+              'himalaya_audiences.whatsapp AS whatsapp',
               'transactions.quantity AS quantity',
               'himalaya_items.nama AS item_name')
           .join('transactions', 'transactions.id', '=', 'himalaya_audiences.transaction_id')
@@ -270,8 +271,14 @@ const paymentNotification = async (req, res) => {
 
 
             // email
-            const { nama, email } = transactionData;
-            const variables = { nama }
+            const { nama, email, whatsapp } = transactionData;
+            const variables = { 
+              nama, 
+              email, 
+              wa : whatsapp, 
+              jumlah_ticket : length, 
+              transaction_id : transactionData.order_id
+            }
 
             const emailHtmlDir = path.join(process.cwd(), "/src/views/mail/ticket.ejs");                 
             const html = await fs.promises.readFile(emailHtmlDir, 'utf-8');
