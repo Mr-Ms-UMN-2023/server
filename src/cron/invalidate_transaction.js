@@ -22,9 +22,11 @@ const invalidateTransaction = async (req, res) => {
 
             const totalQuantity = await Transaction.query()
             .select(knex.raw('SUM(transactions.quantity) as total'))
-            .where(function (query) {
-              query.where('status', 'settlement').orWhereNull('status');
-            }).first()
+            .where((query) => {
+              query.where('status', '<>', 'settlement').orWhereNull('status');
+            })
+            .andWhereRaw('payment_init_time < ?', [time])
+            .first();
 
             let reserved = totalQuantity?.total || 0;
   
