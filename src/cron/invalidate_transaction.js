@@ -20,11 +20,15 @@ const invalidateTransaction = async (req, res) => {
             .andWhereRaw('payment_init_time < ?', [time]);
             console.log(invalidTransactions);
 
-            let reserved = 0;
+            const totalQuantity = await Transaction.query()
+            .select(knex.raw('SUM(transactions.quantity) as total'))
+            .where((query) => {
+              query.where('status', '<>', 'settlement').orWhereNull('status');
+            })
+            .andWhereRaw('payment_init_time < ?', [time])
+            .first();
 
-            for (let transaction of invalidTransactions){
-                reserved += transaction.quantity;
-            }
+            let reserved = totalQuantity?.total || 0;
   
             await Transaction.query()
               .where(function(query) {

@@ -217,7 +217,7 @@ CREATE TABLE `himalaya_qr_tokens` (
   `audience_id` VARCHAR(100), 
   `attendance` TINYINT(1) DEFAULT 0,
   PRIMARY KEY (`token`), 
-  FOREIGN KEY (`audience_id`) REFERENCES `himalaya_audiences` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+  FOREIGN KEY (`audience_id`) REFERENCES `himalaya_audiences` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
