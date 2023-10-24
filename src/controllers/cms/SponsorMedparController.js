@@ -20,9 +20,9 @@ const getAllSponsor = async (req, res) => {
   }
 };
 
-const getAllMedpar = async () => {
+const getAllMedpar = async (req, res) => {
   try {
-    const data = await SponsorMedpar.query().where({ type: 1 });
+    const data = await SponsorMedpar.query().where({ type: 2 });
 
     return res.status(201).json({
       status: "SUCCESS",
