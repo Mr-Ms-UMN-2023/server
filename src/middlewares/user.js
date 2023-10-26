@@ -9,7 +9,8 @@ const auth = async (req, res) => {
       process.env.JWT_SECRET
     );
 
-    const id = user.id;
+    req.user = user;
+    const id = req.user.id;
 
     const account = await User.query().where({ id }).first();
     if (!account) {
