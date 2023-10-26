@@ -4,15 +4,7 @@ const Transaction = require("../../models/Transaction");
 
 const getTransaction = async (req, res) => {
   try {
-    const data = await Transaction.query()
-      .where({ status: "settlement" })
-      .join(
-        "himalaya_audiences",
-        "transactions.id",
-        "=",
-        "himalaya_audiences.transaction_id"
-      )
-      .select("transactions.*", "himalaya_audiences.*");
+    const data = await Transaction.query().select("*");
 
     return res.status(201).json({
       status: "SUCCESS",
