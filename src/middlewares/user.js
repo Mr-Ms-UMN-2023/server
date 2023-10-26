@@ -9,11 +9,11 @@ const auth = async (req, res) => {
       process.env.JWT_SECRET
     );
 
-    req.user = user;
-    const id = req.user.id;
+    // req.user = user;
+    // const id = req.user.id;
 
-    const account = await User.query().where({ id }).first();
-    if (!account) {
+    // const account = await User.query().where({ id }).first();
+    if (!user) {
       throw new ValidationException(
         401,
         "Token tidak valid.",
