@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const User = require('../models/User');
 const ValidationException = require('../exceptions/ValidationException');
 
-const auth = async (req, res) => {
+const auth = async (req, res, next) => {
 
     try {
         const user = jwt.verify(
@@ -12,7 +12,7 @@ const auth = async (req, res) => {
 
         req.user = user;
         const id = req.user.id;
-    
+
         const account = await User.query().where({ id }).first();
         if (!account){
             throw new ValidationException(401, "Token tidak valid.", "UNAUTHENTICATED");

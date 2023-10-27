@@ -34,10 +34,14 @@
               <div>Name / Nama</div>
               <div style="font-weight: bold"><%= pages[i].nama %></div>
             </div>
-            <div style="margin-top: 1rem">
-              <div>Email</div>
-              <div style="font-weight: bold"><%= pages[i].email %></div>
-            </div>
+
+            <% if (vip) { %>
+            <% } else { %>
+              <div style="margin-top: 1rem">
+                <div>Email</div>
+                <div style="font-weight: bold"><%= pages[i].email %></div>
+              </div>
+            <% } %>
           </td>
         </tr>
       </table>
@@ -47,13 +51,18 @@
           Awarding Night Mr. & Ms. UMN 2023
         </div>
 
-        <div style="font-weight: bold; font-size: 30px">Earlybird Sale</div>
+        <% if (vip) { %>
+          <div style="font-weight: bold; font-size: 30px">Himalaya</div>
+        <% } else { %>
+          <div style="font-weight: bold; font-size: 30px">Earlybird Sale</div>
+        <% } %>
+
         <table style="margin-top: 1rem">
           <tr>
             <td>
               <div>Open Gate</div>
               <div>Date</div>
-              <div>Vanue Event</div>
+              <div>Venue Event</div>
             </td>
             <td style="font-weight: bold">
               <div>: 16.00 - 18.00 WIB</div>
@@ -120,10 +129,13 @@
               <div>Name / Nama</div>
               <div style="font-weight: bold"><%= pages[i].nama %></div>
             </div>
-            <div style="margin-top: 1rem">
-              <div>Email</div>
-              <div style="font-weight: bold"><%= pages[i].email %></div>
-            </div>
+            <% if (vip) { %>
+              <% } else { %>
+                <div style="margin-top: 1rem">
+                  <div>Email</div>
+                  <div style="font-weight: bold"><%= pages[i].email %></div>
+                </div>
+              <% } %>
           </td>
         </tr>
       </table>
@@ -133,13 +145,19 @@
           Awarding Night Mr. & Ms. UMN 2023
         </div>
 
-        <div style="font-weight: bold; font-size: 30px">Earlybird Sale</div>
+
+        <% if (vip) { %>
+          <div style="font-weight: bold; font-size: 30px">Himalaya</div>
+        <% } else { %>
+          <div style="font-weight: bold; font-size: 30px">Earlybird Sale</div>
+        <% } %>
+        
         <table style="margin-top: 1rem">
           <tr>
             <td>
               <div>Open Gate</div>
               <div>Date</div>
-              <div>Vanue Event</div>
+              <div>Venue Event</div>
             </td>
             <td style="font-weight: bold">
               <div>: 16.00 - 18.00 WIB</div>
