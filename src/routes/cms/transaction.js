@@ -5,7 +5,7 @@ const Middlewares = require("../../middlewares/user");
 
 router.get(
   "/get/transaction",
-  Middlewares.auth,
+  // Middlewares.auth,
   TransactionController.getTransaction
 );
 
