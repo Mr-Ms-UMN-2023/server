@@ -35,7 +35,7 @@ const orderTicket = async (req, res) => {
       email,
       whatsapp,
       jumlah = 0,
-      item_id = "Earlybird",
+      item_id = "Presale",
     } = req.body;
 
     if (!validator.isValidName(nama))
@@ -514,7 +514,7 @@ const generateVIPTicket = async (req, res) => {
         nama = "VIP-AUDIENCE-" + randomToken(10),
         email = "-",
         whatsapp = "-",// jumlah == 1
-        item_id = "Earlybird",
+        item_id = "Presale",
       } = req.body;      
 
       Model.transaction(async (trx) => {
