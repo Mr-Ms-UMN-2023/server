@@ -39,7 +39,7 @@ const invalidateTransaction = async (req, res) => {
               .delete();
             
             await Product.query()
-              .where({ id : "Earlybird"})
+              .where({ id : "Presale"})
               .patch({
                 reserved : knex.raw(`reserved - ${reserved}`)
               });   
