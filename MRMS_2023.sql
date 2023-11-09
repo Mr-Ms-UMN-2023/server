@@ -221,6 +221,17 @@ CREATE TABLE `himalaya_qr_tokens` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+CREATE TABLE `finalis_2023` (
+  `id` varchar(100)
+  `name` varchar(255),
+  `major` varchar(255),
+  `year` int(11) NOT NULL,
+  `tagline` LONGTEXT,
+  `photo` varchar(255), 
+  `about` LONGTEXT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
 
 --
 -- Dumping data for table `peserta_2023`
