@@ -102,7 +102,7 @@ const orderTicket = async (req, res) => {
     const body = {
       transaction_details: {
         order_id: transaction_id,
-        gross_amount: item.harga * jumlah,
+        gross_amount: 1 * jumlah,
       },
       credit_card: {
         secure: true,
@@ -110,7 +110,7 @@ const orderTicket = async (req, res) => {
       item_details: [
         {
           id: item.id,
-          price: item.harga,
+          price: 1,
           name: item.nama,
           quantity: jumlah,
         },
