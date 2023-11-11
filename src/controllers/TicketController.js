@@ -117,6 +117,16 @@ const orderTicket = async (req, res) => {
       ],
       customer_details: userData,
     };
+    let available = null;
+    if (item.id == "Couple") {
+      const items = await Product.query().select("*");
+
+      available = items.find(
+        (e) =>
+          parseInt(e.reserved, 10) + parseInt(jumlah, 10) <= e.quota &&
+          e.id !== item.id
+      );
+    }
 
     Model.transaction(async (trx) => {
       await Product.query()
@@ -125,13 +135,29 @@ const orderTicket = async (req, res) => {
           reserved: parseInt(item.reserved, 10) + parseInt(jumlah, 10),
         });
 
-      await Transaction.query().insert({
-        id: body.transaction_details.order_id,
-        item_id: item.id,
-        quantity: jumlah,
-        status: null,
-        payment_init_time: new Date(),
-      });
+      if (item.id == "Couple") {
+        await Product.query()
+          .where({ id: available.id })
+          .update({
+            reserved: parseInt(available.reserved, 10) + parseInt(jumlah, 10),
+          });
+
+        await Transaction.query().insert({
+          id: body.transaction_details.order_id,
+          item_id: item.id,
+          quantity: jumlah,
+          status: available.id,
+          payment_init_time: new Date(),
+        });
+      } else {
+        await Transaction.query().insert({
+          id: body.transaction_details.order_id,
+          item_id: item.id,
+          quantity: jumlah,
+          status: null,
+          payment_init_time: new Date(),
+        });
+      }
 
       await Audience.query().insert({
         ...userData,
@@ -262,7 +288,7 @@ const paymentNotification = async (req, res) => {
       const length = QRTokens.length;
       let pdfVariables = {
         pages: [],
-        vip : false,
+        vip: false,
         total: length,
       };
 
@@ -504,84 +530,82 @@ const getTicketStringsByOrderID = async (req, res) => {
       message: "Internal Server Error : " + err.message,
     });
   }
-}; 
+};
 
 const generateVIPTicket = async (req, res) => {
+  try {
+    const {
+      nama = "VIP-AUDIENCE-" + randomToken(10),
+      email = "-",
+      whatsapp = "-", // jumlah == 1
+      item_id = "Presale",
+    } = req.body;
 
-    try {
+    Model.transaction(async (trx) => {
+      const userID = uuid();
+      const createAudience = await Audience.query().insert({
+        id: userID,
+        nama,
+        email,
+        whatsapp,
+      });
 
-      const {
-        nama = "VIP-AUDIENCE-" + randomToken(10),
-        email = "-",
-        whatsapp = "-",// jumlah == 1
-        item_id = "Presale",
-      } = req.body;      
+      const item = await Product.query().where({ id: item_id }).first();
 
-      Model.transaction(async (trx) => {
-        
-        const userID = uuid();
-        const createAudience = await Audience.query()
-          .insert({
-            id : userID, 
-            nama,
-            email, 
-            whatsapp,
-          }); 
-
-        const item = await Product.query().where({ id: item_id }).first();          
-
-        if (!item) {
-          throw new ValidationException(
-            404,
-            "Produk tidak ditemukan",
-            "PRODUCT_NOT_FOUND"
-          );
-        }        
-
-        const QRTokens = [];
-        const token = "VIP-MRMS23-" + randomToken(32);
-        QRTokens.push({ token, audience_id: userID });        
-        await knex("himalaya_qr_tokens").insert(QRTokens);        
-
-        const fullTicketHtmlDir = path.join(
-          process.cwd(),
-          "/src/views/pdf/ticket.ejs"
+      if (!item) {
+        throw new ValidationException(
+          404,
+          "Produk tidak ditemukan",
+          "PRODUCT_NOT_FOUND"
         );
-        const fullTicketHtml = await fs.promises.readFile(
-          fullTicketHtmlDir,
-          "utf-8"
-        );
-        const length = 1;
-        let pdfVariables = {
-          pages: [],
-          total: length,
-          vip : true,
-        };        
+      }
 
-        for (let ticket of QRTokens) {
-          const qrCodeImage = await QRCode.toDataURL(ticket?.token);
-  
-          const pageVariables = {
-            nama,
-            email,
-            qr : qrCodeImage,
-            ticket_token: ticket?.token,
-            ticket_number: 1,
-          };
-  
-          pdfVariables.pages.push(pageVariables);
-        }
+      const QRTokens = [];
+      const token = "VIP-MRMS23-" + randomToken(32);
+      QRTokens.push({ token, audience_id: userID });
+      await knex("himalaya_qr_tokens").insert(QRTokens);
 
-        const pdfHtmlDoc = ejs.render(fullTicketHtml, pdfVariables);
+      const fullTicketHtmlDir = path.join(
+        process.cwd(),
+        "/src/views/pdf/ticket.ejs"
+      );
+      const fullTicketHtml = await fs.promises.readFile(
+        fullTicketHtmlDir,
+        "utf-8"
+      );
+      const length = 1;
+      let pdfVariables = {
+        pages: [],
+        total: length,
+        vip: true,
+      };
 
-        // fullHtml += footerHtml;
-  
-        const filename = `Tiket VIP Himalaya - MR. & MS. UMN 2023 - ${randomToken(10)}.pdf`;
-        const pathName = `storage/${filename}`;        
+      for (let ticket of QRTokens) {
+        const qrCodeImage = await QRCode.toDataURL(ticket?.token);
 
-        const createPDF = () => {
-          return new Promise((resolve, reject) => {
-            pdf
+        const pageVariables = {
+          nama,
+          email,
+          qr: qrCodeImage,
+          ticket_token: ticket?.token,
+          ticket_number: 1,
+        };
+
+        pdfVariables.pages.push(pageVariables);
+      }
+
+      const pdfHtmlDoc = ejs.render(fullTicketHtml, pdfVariables);
+
+      // fullHtml += footerHtml;
+
+      const filename = `Tiket VIP Himalaya - MR. & MS. UMN 2023 - ${randomToken(
+        10
+      )}.pdf`;
+      const pathName = `storage/${filename}`;
+
+      const createPDF = () => {
+        return new Promise((resolve, reject) => {
+          pdf
             .create(pdfHtmlDoc, {
               width: "1200px",
               height: "1650px",
@@ -589,57 +613,54 @@ const generateVIPTicket = async (req, res) => {
             .toStream(function (err, stream) {
               stream.pipe(fs.createWriteStream(pathName));
               resolve();
-            });            
-          }); 
-        }
-
-        createPDF()
-          .then((result) => {
-              // console.log("KWKWKKW");
-              // const f = fs.promises.readFile(
-              //   path.join(process.cwd(), pathName),
-              //   "utf-8"
-              // );    
-              // console.log(f);
-              res.sendFile(path.join(process.cwd(), pathName), {
-                headers: {
-                  'Content-Type': 'application/pdf',
-                },
-              });             
-          }).catch((err) => {
-            console.error(err);
-            return res.status(500).send({
-              code: 500,
-              message: "Internal Server Error : " + err.message,
-            });            
-          })
-
-      }).catch((err) => {
-        console.error(err);
-        return res.status(500).send({
-          code: 500,
-          message: "Internal Server Error : " + err.message,
+            });
         });
-      });
+      };
 
-
-    } catch (err){
-      if (err instanceof ValidationException) {
-        return res.status(err.code).send({
-          code: err.code,
-          type: err.type,
-          message: err.message,
+      createPDF()
+        .then((result) => {
+          // console.log("KWKWKKW");
+          // const f = fs.promises.readFile(
+          //   path.join(process.cwd(), pathName),
+          //   "utf-8"
+          // );
+          // console.log(f);
+          res.sendFile(path.join(process.cwd(), pathName), {
+            headers: {
+              "Content-Type": "application/pdf",
+            },
+          });
+        })
+        .catch((err) => {
+          console.error(err);
+          return res.status(500).send({
+            code: 500,
+            message: "Internal Server Error : " + err.message,
+          });
         });
-      }
-
+    }).catch((err) => {
       console.error(err);
       return res.status(500).send({
         code: 500,
         message: "Internal Server Error : " + err.message,
-      });      
+      });
+    });
+  } catch (err) {
+    if (err instanceof ValidationException) {
+      return res.status(err.code).send({
+        code: err.code,
+        type: err.type,
+        message: err.message,
+      });
     }
 
-}
+    console.error(err);
+    return res.status(500).send({
+      code: 500,
+      message: "Internal Server Error : " + err.message,
+    });
+  }
+};
 
 module.exports = {
   orderTicket,

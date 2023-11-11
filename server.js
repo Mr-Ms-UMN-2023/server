@@ -25,6 +25,7 @@ app.use("/api/ticket", require("./src/routes/ticket.js"));
 app.use("/api/pdf", require("./src/routes/pdf.js"));
 app.use("/api/sponsor_medpar", require("./src/routes/cms/sponsor_medpar"));
 app.use("/api/transaction", require("./src/routes/cms/transaction.js"));
+app.use("/api/admin/ticket", require("./src/routes/cms/tiket.js"));
 
 cron.schedule("* * * * *", invalidateTransaction);
 

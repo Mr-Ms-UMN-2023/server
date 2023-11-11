@@ -4,11 +4,7 @@ const SponsorMedparController = require("../../controllers/cms/SponsorMedparCont
 const Middlewares = require("../../middlewares/user");
 
 router.get("/get/sponsors", SponsorMedparController.getAllSponsor);
-router.get(
-  "/get/:id",
-  //   Middlewares.auth,
-  SponsorMedparController.sponsorDetail
-);
+router.get("/get/:id", SponsorMedparController.sponsorDetail);
 router.get("/get/medpar", SponsorMedparController.getAllMedpar);
 router.post("/put", SponsorMedparController.createData);
 router.post("/edit", SponsorMedparController.editData);
