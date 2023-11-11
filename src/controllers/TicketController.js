@@ -301,6 +301,7 @@ const paymentNotification = async (req, res) => {
           qr: qrCodeImage,
           ticket_token: ticket?.token,
           ticket_number: index++ + 1,
+          item_id: transactionData.item_name,
         };
 
         pdfVariables.pages.push(pageVariables);
@@ -589,6 +590,7 @@ const generateVIPTicket = async (req, res) => {
           qr: qrCodeImage,
           ticket_token: ticket?.token,
           ticket_number: 1,
+          item_id: item_id,
         };
 
         pdfVariables.pages.push(pageVariables);

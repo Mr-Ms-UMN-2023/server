@@ -35,12 +35,11 @@
               <div style="font-weight: bold"><%= pages[i].nama %></div>
             </div>
 
-            <% if (vip) { %>
-            <% } else { %>
-              <div style="margin-top: 1rem">
-                <div>Email</div>
-                <div style="font-weight: bold"><%= pages[i].email %></div>
-              </div>
+            <% if (vip) { %> <% } else { %>
+            <div style="margin-top: 1rem">
+              <div>Email</div>
+              <div style="font-weight: bold"><%= pages[i].email %></div>
+            </div>
             <% } %>
           </td>
         </tr>
@@ -52,9 +51,11 @@
         </div>
 
         <% if (vip) { %>
-          <div style="font-weight: bold; font-size: 30px">Himalaya</div>
+        <div style="font-weight: bold; font-size: 30px">Himalaya</div>
         <% } else { %>
-          <div style="font-weight: bold; font-size: 30px">Presale</div>
+        <div style="font-weight: bold; font-size: 30px">
+          <%= ticket_token %>
+        </div>
         <% } %>
 
         <table style="margin-top: 1rem">
@@ -129,13 +130,12 @@
               <div>Name / Nama</div>
               <div style="font-weight: bold"><%= pages[i].nama %></div>
             </div>
-            <% if (vip) { %>
-              <% } else { %>
-                <div style="margin-top: 1rem">
-                  <div>Email</div>
-                  <div style="font-weight: bold"><%= pages[i].email %></div>
-                </div>
-              <% } %>
+            <% if (vip) { %> <% } else { %>
+            <div style="margin-top: 1rem">
+              <div>Email</div>
+              <div style="font-weight: bold"><%= pages[i].email %></div>
+            </div>
+            <% } %>
           </td>
         </tr>
       </table>
@@ -145,13 +145,12 @@
           Awarding Night Mr. & Ms. UMN 2023
         </div>
 
-
         <% if (vip) { %>
-          <div style="font-weight: bold; font-size: 30px">Himalaya</div>
+        <div style="font-weight: bold; font-size: 30px">Himalaya</div>
         <% } else { %>
-          <div style="font-weight: bold; font-size: 30px">Presale</div>
+        <div style="font-weight: bold; font-size: 30px"><%= item_id %></div>
         <% } %>
-        
+
         <table style="margin-top: 1rem">
           <tr>
             <td>
