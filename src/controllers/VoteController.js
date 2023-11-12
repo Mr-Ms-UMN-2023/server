@@ -120,11 +120,10 @@ const orderVote = async (req, res) => {
   }
 }
 
-const votePaymentNotification = async (req, res) => {
-
-}
+// const votePaymentNotification = async (req, res) => {
+// }
 
 module.exports = {
     orderVote,
-    votePaymentNotification
+    // votePaymentNotification
 }
