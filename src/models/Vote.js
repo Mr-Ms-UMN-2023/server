@@ -9,4 +9,4 @@ class Vote extends Model {
     }
 }
 
-module.exports = Peserta
+module.exports = Vote

@@ -27,6 +27,9 @@ const validator = require("../helpers/data_validation");
 const ValidationException = require("../exceptions/ValidationException");
 const { midtransCore, midtransSnap } = require("../config/midtrans");
 
+const Vote = require("../models/Audience");
+const Finalist = require("../models/Finalist");
+
 const orderTicket = async (req, res) => {
   const validationInfoList = [];
   try {

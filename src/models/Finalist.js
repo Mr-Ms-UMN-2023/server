@@ -9,4 +9,4 @@ class Finalist extends Model {
     }
 }
 
-module.exports = Peserta
+module.exports = Finalist
