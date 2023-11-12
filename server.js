@@ -22,6 +22,7 @@ app.use("/api/auth", require("./src/routes/users/auth.js"));
 
 // public routes
 app.use("/api/ticket", require("./src/routes/ticket.js"));
+app.use("/api/vote", require("./src/routes/vote.js"));
 app.use("/api/pdf", require("./src/routes/pdf.js"));
 app.use("/api/sponsor_medpar", require("./src/routes/cms/sponsor_medpar"));
 app.use("/api/transaction", require("./src/routes/cms/transaction.js"));

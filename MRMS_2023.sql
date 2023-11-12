@@ -221,6 +221,47 @@ CREATE TABLE `himalaya_qr_tokens` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
+-- CREATE TABLE `voter_2023` (
+--   `id` varchar(100) PRIMARY KEY,
+--   `name` varchar(255), 
+--   `email` varchar(255), 
+--   `whatsapp` VARCHAR(50),  
+--   `created_at` datetime NULL DEFAULT NULL, 
+--   `updated_at` datetime NULL DEFAULT NULL  
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- CREATE TABLE `vote_list_2023` (
+--   `voter_id` varchar(100),
+--   `finalis_id` varchar(100),
+--   `quantity` int(11) DEFAULT(1),
+--   FOREIGN KEY (`voter_id`) REFERENCES `voter_2023` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+--   FOREIGN KEY (`finalis_id`) REFERENCES `finalis_2023` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `finalis_2023` (
+  `id` varchar(100) PRIMARY KEY,
+  `name` varchar(255),
+  `major` varchar(255) DEFAULT NULL,
+  `year` int(11) DEFAULT NULL,
+  `tagline` LONGTEXT DEFAULT NULL,
+  `photo` varchar(255) DEFAULT NULL, 
+  `about` LONGTEXT DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+CREATE TABLE `vote_list_2023` (
+  `id` varchar(100) PRIMARY KEY,
+  `finalis_id` varchar(100),
+  `status` VARCHAR(30) NULL,
+  `quantity` INTEGER,
+  `item_id` VARCHAR(100),
+  FOREIGN KEY (`item_id`) REFERENCES `himalaya_items` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (`finalis_id`) REFERENCES `finalis_2023` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+
 
 --
 -- Dumping data for table `peserta_2023`
