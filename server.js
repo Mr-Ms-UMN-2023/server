@@ -17,6 +17,9 @@ app.use(express.static("public"));
 app.use(cors());
 app.use(fileUpload());
 
+// api auth route
+app.use("/api/self", require('./src/middlewares/user').APIAuth);
+
 // admin routes
 app.use("/api/auth", require("./src/routes/users/auth.js"));
 
