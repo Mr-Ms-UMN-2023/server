@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const TicketController = require("../controllers/TicketController");
+const ScanQrController = require("../controllers/ScanQrController");
 const Middlewares = require("../middlewares/user");
 const { getTicketItem } = require("../controllers/ticket/TiketItemController");
 
@@ -16,6 +17,20 @@ router.post(
   "/vip/generate",
   Middlewares.auth,
   TicketController.generateVIPTicket
+);
+
+
+// scan qr
+
+router.get(
+  "/data/:token",
+  Middlewares.auth, 
+  ScanQrController.getTicketData
+)
+router.post(
+  "/attendance",
+  Middlewares.auth, 
+  ScanQrController.attendanceHandler
 );
 
 module.exports = router;
