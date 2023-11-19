@@ -103,8 +103,47 @@ const getTicketData = async (req, res) => {
     }
 }
 
+const getAllTicket = async (req, res) => {
+    try {
+        const tickets = await QRToken.query()
+            .select(
+                'himalaya_qr_tokens.token AS token', 
+                'himalaya_qr_tokens.attendance AS attendance', 
+                'himalaya_audiences.nama AS nama', 
+                'himalaya_audiences.email AS email', 
+                'himalaya_audiences.transaction_id AS transaction_id'
+            )
+            .join('himalaya_audiences', 'himalaya_audiences.id', '=', 'himalaya_qr_tokens.audience_id')    
+
+            return res.status(200).json({
+                code : 200, 
+                message : "Berhasil mendapatkan data tiket.", 
+                data : {
+                    count : tickets.length,
+                    ticket : tickets
+                }
+            });        
+        
+    } catch (err) {
+        if (err instanceof ValidationException) {
+            return res.status(err.code).send({
+              code: err.code,
+              type: err.type,
+              message: err.message,
+            });
+          }
+      
+          console.error(err);
+          return res.status(500).send({
+            code: 500,
+            message: "Internal Server Error : " + err.message,
+          });        
+    }
+}
+
 
 module.exports = {
     attendanceHandler, 
-    getTicketData
+    getTicketData,
+    getAllTicket
 }
