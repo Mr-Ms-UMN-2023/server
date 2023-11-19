@@ -27,6 +27,11 @@ router.get(
   Middlewares.auth, 
   ScanQrController.getTicketData
 )
+router.get(
+  "/get_all",
+  Middlewares.auth, 
+  ScanQrController.getAllTicket
+);
 router.post(
   "/attendance",
   Middlewares.auth, 
