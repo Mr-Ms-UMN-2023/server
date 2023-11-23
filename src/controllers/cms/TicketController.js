@@ -73,9 +73,8 @@ const sendTiket = async (req, res) => {
       pages: [],
       vip: false,
       total: length,
+      item_id: transactionData.item_name,
     };
-
-    console.log("masuk 4");
 
     for (let ticket of QRToken) {
       const qrCodeImage = await QRCode.toDataURL(ticket?.tokens);
@@ -86,6 +85,7 @@ const sendTiket = async (req, res) => {
         qr: qrCodeImage,
         ticket_token: ticket?.token,
         ticket_number: index++ + 1,
+        item_id: transactionData.item_name,
       };
 
       pdfVariables.pages.push(pageVariables);
@@ -113,6 +113,7 @@ const sendTiket = async (req, res) => {
       wa: whatsapp,
       jumlah_ticket: length,
       transaction_id: transactionData.order_id,
+      item_id: transactionData.item_name,
     };
 
     const emailHtmlDir = path.join(process.cwd(), "/src/views/mail/ticket.ejs");
@@ -146,6 +147,7 @@ const sendTiket = async (req, res) => {
       message: "Pembayaran berhasil dilakukan.",
     });
   } catch (err) {
+    console.log(err);
     return res.status(500).json({
       status: "ERROR",
       type: "PAYMENT_SETTLEMENT",

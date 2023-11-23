@@ -18,7 +18,7 @@ app.use(cors());
 app.use(fileUpload());
 
 // api auth route
-app.use("/api/self", require('./src/middlewares/user').APIAuth);
+app.use("/api/self", require("./src/middlewares/user").APIAuth);
 
 // admin routes
 app.use("/api/auth", require("./src/routes/users/auth.js"));
@@ -30,6 +30,7 @@ app.use("/api/pdf", require("./src/routes/pdf.js"));
 app.use("/api/sponsor_medpar", require("./src/routes/cms/sponsor_medpar"));
 app.use("/api/transaction", require("./src/routes/cms/transaction.js"));
 app.use("/api/admin/ticket", require("./src/routes/cms/tiket.js"));
+app.use("/api/admin/vote", require("./src/routes/cms/vote.js"));
 
 cron.schedule("* * * * *", invalidateTransaction);
 
