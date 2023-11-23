@@ -224,7 +224,7 @@ const paymentNotification = async (req, res) => {
           // vote keitung kalo udh settlement
           if (transaction_status == "settlement"){
             Model.transaction(async trx => {
-              await Vote.query().where({id : order_id}).update({status : "settlement"});
+              await Vote.query().where({id : order_id}).update({status : "settlement", paid_at : new Date()});
             }); 
 
             return res.status(201).json({
