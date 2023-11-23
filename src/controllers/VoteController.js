@@ -91,7 +91,8 @@ const orderVote = async (req, res) => {
                 item_id : item.id,
                 quantity,
                 status : null,
-                finalis_id 
+                finalis_id,
+                created_at : new Date() 
             });
         });
 

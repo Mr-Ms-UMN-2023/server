@@ -26,7 +26,7 @@ const { sendEmail } = require("../helpers/mailer");
 const validator = require("../helpers/data_validation");
 const ValidationException = require("../exceptions/ValidationException");
 const { midtransCore, midtransSnap } = require("../config/midtrans");
-const { votePaymentNotification } = require("../controllers/VoteController");
+const { votePaymentNotification } = require('../controllers/VoteController');
 
 const Vote = require("../models/Vote");
 const Finalist = require("../models/Finalist");
@@ -204,76 +204,71 @@ const orderTicket = async (req, res) => {
 const paymentNotification = async (req, res) => {
   try {
     const payload = req.body;
-    const { transaction_status, order_id = "" } = payload;
+    const { transaction_status, order_id = ""} = payload;
 
-    if (order_id.startsWith("VOTE-")) {
-      const transactionData = await Vote.query()
-        .where({ id: order_id })
-        .first();
+    if (order_id.startsWith("VOTE-")){
+        const transactionData = await Vote.query()
+          .where({id : order_id})
+          .first();
 
-      if (transactionData && transactionData?.status == "settlement") {
-        return res.status(208).json({
-          status: "SUCCESS",
-          type: "PAID",
-          code: 208,
-          message: "Pembayaran telah dilakukan.",
-        });
-      }
+          if (transactionData && transactionData?.status == "settlement") {
+            return res.status(208).json({
+              status: "SUCCESS",
+              type: "PAID",
+              code: 208,
+              message: "Pembayaran telah dilakukan.",
+            });
+          }
 
-      // vote keitung kalo udh settlement
-      if (transaction_status == "settlement") {
-        Model.transaction(async (trx) => {
-          await Vote.query()
-            .where({ id: order_id })
-            .update({ status: "settlement" });
-        });
 
-        return res.status(201).json({
-          status: "SUCCESS",
-          type: "PAYMENT_SETTLEMENT",
-          code: 201,
-          message: "Pembayaran berhasil dilakukan.",
-        });
-      }
+          // vote keitung kalo udh settlement
+          if (transaction_status == "settlement"){
+            Model.transaction(async trx => {
+              await Vote.query().where({id : order_id}).update({status : "settlement", paid_at : new Date()});
+            }); 
 
-      if (transaction_status == "pending") {
-        Model.transaction(async (trx) => {
-          await Vote.query()
-            .where({ id: order_id })
-            .update({ status: "pending" });
-        });
+            return res.status(201).json({
+              status: "SUCCESS",
+              type: "PAYMENT_SETTLEMENT",
+              code: 201,
+              message: "Pembayaran berhasil dilakukan.",
+            });            
+          }
 
-        return res.status(200).json({
-          status: "SUCCESS",
-          type: "PAYMENT_PENDING",
-          code: 200,
-          message:
-            "Pembayaran sedang dalam status pending / menunggu aksi dari user.",
-        });
-      }
+          if (transaction_status == "pending"){
+            Model.transaction(async trx => {
+              await Vote.query().where({id : order_id}).update({status : "pending"});
+            });             
 
-      Model.transaction(async (trx) => {
-        Model.transaction(async (trx) => {
-          await Vote.query()
-            .where({ id: order_id })
-            .update({ status: transaction_status });
-        });
-      }).catch((err) => {
-        console.error(err);
-        return res.status(500).send({
-          code: 500,
-          message: "Internal Server Error : " + err.message,
-        });
-      });
+            return res.status(200).json({
+              status: "SUCCESS",
+              type: "PAYMENT_PENDING",
+              code: 200,
+              message:
+                "Pembayaran sedang dalam status pending / menunggu aksi dari user.",
+            });            
+          }
 
-      return res.status(200).json({
-        status: "SUCCESS",
-        type: "PAYMENT_NOTIFICATION",
-        code: 200,
-        message:
-          "Berhasil melakukan pemrosesan pada payment dengan status " +
-          transaction_status,
-      });
+          Model.transaction(async (trx) => {
+            Model.transaction(async trx => {
+              await Vote.query().where({id : order_id}).update({status : transaction_status});
+            });   
+          }).catch((err) => {
+            console.error(err);
+            return res.status(500).send({
+              code: 500,
+              message: "Internal Server Error : " + err.message,
+            });
+          });
+      
+          return res.status(200).json({
+            status: "SUCCESS",
+            type: "PAYMENT_NOTIFICATION",
+            code: 200,
+            message:
+              "Berhasil melakukan pemrosesan pada payment dengan status " +
+              transaction_status,
+          });          
     }
 
     const transactionData = await Audience.query()
@@ -364,7 +359,6 @@ const paymentNotification = async (req, res) => {
         pages: [],
         vip: false,
         total: length,
-        item_id: transactionData.item_name,
       };
 
       for (let ticket of QRTokens) {
